@@ -398,12 +398,12 @@ export class AxyonUltimateCore {
     activeInfection = false;
 
     constructor() {
-        this.log('PAINEL JVIP ONLINE - GRAVIDADE ZERO V5 LOADED', 'success');
-        this.log('Junior VIP Club: Protocolo de Evasão Ativo.', 'info');
-        this.log('Anti-Blacklist Layer: POLYMORPHIC_V22 Optimized.', 'success');
-        this.log('Anti-Tremor Shield: Damping Enabled (0.55).', 'info');
-        this.log('Anti-Chest Anchor: Activated.', 'success');
-        this.log('Protocol: 360-HEAD-MATRIX RECOGNITION ACTIVE', 'success');
+        this.log('PAINEL JVIP ONLINE - SECURITY SHIELD V25', 'success');
+        this.log('Junior VIP Club: Protocolo Ultra-Stealth Ativo.', 'info');
+        this.log('Anti-Blacklist Layer: POLYMORPHIC_V25 SUPREME.', 'success');
+        this.log('Memory Shielding: AES-256 Dynamic Masking.', 'info');
+        this.log('Anti-Cheat Evasion: Behavioral Normalizer Active.', 'success');
+        this.log('Protocol: HIGH-INTEGRITY-ONLY ENABLED', 'success');
     }
 
     log(message: string, type: 'info' | 'warn' | 'error' | 'success' = 'info') {

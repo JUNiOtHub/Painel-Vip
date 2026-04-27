@@ -51,21 +51,14 @@ namespace ElitePanel.Core
                     Vector3 enemyBase3D = new Vector3(100f, 50f, 200f); 
                     
                     // 3. Sistema Smart Bone (Painel Famosos) 
-                    // O eixo Y em Unity é a vertical. Adicionamos a altura do pescoço/cabeça.
-                    // Para jogar o HS "Capa" na precisão perfeita.
-                    float headVerticalOffset = 0.65f; // Altura até a cabeça
+                    float headVerticalOffset = 0.65f; 
                     Vector3 enemyHead3D = new Vector3(enemyBase3D.X, enemyBase3D.Y + headVerticalOffset, enemyBase3D.Z);
-                    
-                    // 4. Converter para tela 2D
                     Vector2 headScreenPos = Math3D.WorldToScreen(enemyHead3D, viewMatrix, screenW, screenH);
-
-                    // 4. Se encontrou na tela, chama a injeção do mouse
+                    
+                    // 4. Injeção de Mouse (Gravidade Estabilizada)
                     if (headScreenPos != Vector2.Zero)
                     {
-                        // GRAVIDADE ATIVADA: Puxa instantaneamente mas com damping JVIP
-                        float preFireFov = 180.0f; // Reduzido levemente para maior foco
-                        
-                        MouseInjector.AutoSnapAim(headScreenPos.X, headScreenPos.Y, screenW, screenH, preFireFov);
+                        MouseInjector.AutoSnapAim(headScreenPos.X, headScreenPos.Y, screenW, screenH, 180.0f);
                     }
 
                     // Loop de alta performance: 2ms estabilizado para evitar picos e tremor (500Hz)
