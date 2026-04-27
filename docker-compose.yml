@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  axyon-titan:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_TITAN_SERVER=true
+    restart: always
