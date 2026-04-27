@@ -31,14 +31,7 @@ class FPSOptimizer {
             this.priorityPool[i] = (Math.sin(i * 0.05) * 0.5 + 0.5) * (Math.cos(i * 0.01) * 0.5 + 0.5);
         }
         
-        // Setup specialized garbage collection triggers if environment permits
-        if (typeof global !== 'undefined' && (global as any).gc) {
-            setInterval(() => { 
-                try { 
-                    (global as any).gc(); 
-                } catch(e) {} 
-            }, CONFIG.PERFORMANCE.GC_INTERVAL || 30000);
-        }
+        // Setup specialized garbage collection triggers if environment permits (Removed: manual gc causes event loop stuttering)
         
         this.cleanupInterval = setInterval(() => this.cleanupCache(), CONFIG.PERFORMANCE.CLEANUP_INTERVAL || 5000);
     }
@@ -357,12 +350,21 @@ class BallisticCalculator {
         const horizontalLead = 300.585 * distScalar * (300.5 + (safeVelMag * 30.8)) * snap * sensiBoost;
         const finalX = (rawX > 0 ? 1 : -1) * horizontalLead;
         
-        // APELÃO: Utilizando o arquivo de Lock Head supremo com modo EXECUÇÃO
-        const ultimateLock = UltimateLockHead.forceCapa(absDist, rawY, pVel, cRot, weapon.category, playerState);
+        // APELÃO: Utilizando o sistema Smart Bone Targeting (Painel VIP)
+        const ultimateLock = UltimateLockHead.forceCapa(
+            absDist, 
+            rawY, 
+            pVel, 
+            cRot, 
+            weapon.category, 
+            playerState || 'IDLE',
+            config.AIM_TARGET || 'HEAD',
+            config.MAGNETIC_PULL || 1.85
+        );
 
         return { 
             x: ultimateLock.x, 
-            y: ultimateLock.y, // ABSOLUTE HEAD LOCK
+            y: ultimateLock.y, // SMART BONE LOCK
             power: ultimateLock.power,
             active: true
         };

@@ -46,24 +46,29 @@ namespace ElitePanel.Core
                     // 1. Lê a matriz 3D da tela
                     Matrix4x4 viewMatrix = ReadMatrix(viewMatrixAddr);
                     
-                    // 2. Mock: Extrair a posição 3D do oponente (Bone 01)
-                    Vector3 enemyHead3D = new Vector3(100f, 50f, 200f); 
+                    // 2. Extrair a posição 3D do oponente (Peito/Bacia base)
+                    // Na vida real isso leria do EntityList, ex: ProcessManager.ReadVector3(entity + offset)
+                    Vector3 enemyBase3D = new Vector3(100f, 50f, 200f); 
                     
-                    // 3. Converter para tela 2D
+                    // 3. Sistema Smart Bone (Painel Famosos) 
+                    // O eixo Y em Unity é a vertical. Adicionamos a altura do pescoço/cabeça.
+                    // Para jogar o HS "Capa" na precisão perfeita.
+                    float headVerticalOffset = 0.65f; // Altura até a cabeça
+                    Vector3 enemyHead3D = new Vector3(enemyBase3D.X, enemyBase3D.Y + headVerticalOffset, enemyBase3D.Z);
+                    
+                    // 4. Converter para tela 2D
                     Vector2 headScreenPos = Math3D.WorldToScreen(enemyHead3D, viewMatrix, screenW, screenH);
 
                     // 4. Se encontrou na tela, chama a injeção do mouse
                     if (headScreenPos != Vector2.Zero)
                     {
-                        // Aqui seria calculado o DeltaX/DeltaY para o centro da tela
-                        int dX = (int)(headScreenPos.X - (screenW / 2));
-                        int dY = (int)(headScreenPos.Y - (screenH / 2));
-
-                        // Implementação rápida assíncrona
-                        MouseInjector.MoveMouseSendInput(dX, dY);
+                        // GRAVIDADE ATIVADA: Puxa instantaneamente em 1ms sem tocar no botão atirar
+                        float preFireFov = 200.0f; // Área de alcance magnético extremo
+                        
+                        MouseInjector.AutoSnapAim(headScreenPos.X, headScreenPos.Y, screenW, screenH, preFireFov);
                     }
 
-                    // Anti-detecção: Pausa microscópica para o Thread não gerar picos na CPU
+                    // Loop de alta performance: 1ms step tracking contínuo para manter a mira grudada
                     Thread.Sleep(1); 
                 }
             });

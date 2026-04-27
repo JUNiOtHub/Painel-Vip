@@ -2,17 +2,20 @@ export class UltimateLockHead {
     // History array for variance calculation
     private static recentVelYHistory: number[] = [];
 
-    // --- MODO EXECUÇÃO: FORÇA BRUTA (MIRA GRUDADA) ---
-    // A testa no Free Fire fica entre -35 e -55 de Y.
-    // 0 = PEITO (ou valor positivo pra baixo). Quanto mais negativo, mais alto.
+    // --- MODO EXECUÇÃO: PAINEL DOS FAMOSOS (SMART BONE TARGETING) ---
+    // Em jogos Unity (Free Fire), o eixo Y representa a altura (Vertical).
+    // O pacote interceptado geralmente aponta para o centro da massa (Peito/Bacia).
+    // Para dar "Capa" (Headshot), precisamos aplicar um offset positivo no eixo Y.
 
     static forceCapa(
         distance: number, 
-        currentY: number, 
+        currentY: number, // Representa a coordenada Y do mundo (Altura)
         enemyVelX: number = 0, 
         enemyVelY: number = 0, 
         weaponCategory: string = 'ASSAULT',
-        playerState: string = 'IDLE'
+        playerState: string = 'IDLE',
+        configTarget: string = 'HEAD', // HEAD, NECK, CHEST
+        magneticPull: number = 1.85 // Intensidade do Puxão configurado no painel
     ): { x: number, y: number, power: number } {
         
         // --- 0. PREDICTION VARIANCE (STANDARD DEVIATION OF Y-AXIS) ---
@@ -28,10 +31,27 @@ export class UltimateLockHead {
             stdDevY = Math.sqrt(variance);
         }
 
-        // Variância alta -> Inimigo pulando ou deitando freneticamente -> Puxada mais agressiva (up to +150%)
-        // Variância baixa -> Inimigo parado ou movimento linear -> Fator de suavização p/ não tremer
-        const varianceAggression = 1.0 + Math.min(stdDevY * 0.05, 1.5); 
-        const stabilitySmoothing = stdDevY < 2.0 ? 0.75 : 1.0; 
+        // --- 1. DEFINIÇÃO DE HITBOX (BONE OFFSETS) ---
+        // Aqui corrigimos o problema de "só grudar no peito".
+        // Base Unit Unity = 1 metro. Altura média do personagem = 1.75m. Peito = ~1.2m
+        let targetBoneOffset = 0.0;
+        
+        if (configTarget === 'HEAD') {
+            targetBoneOffset = 0.65; // Do peito para a cabeça (~65cm pra cima)
+        } else if (configTarget === 'NECK') {
+            targetBoneOffset = 0.45; // Do peito para o pescoço (Disfarçado, pega cabeça com espalhamento)
+        } else {
+            targetBoneOffset = 0.05; // Peito (Center of Mass)
+        }
+
+        // Dinâmica de Pulo / Agachado ajusta a Hitbox
+        if (playerState === 'CROUCH') {
+            targetBoneOffset -= 0.35;
+        } else if (playerState === 'PRONE') {
+            targetBoneOffset -= 0.85;
+        } else if (playerState === 'JUMP') {
+            targetBoneOffset += 0.20;
+        }
 
         // --- WEAPON CATEGORY MULTIPLIERS ---
         const isSMG = weaponCategory === 'SMG';
@@ -46,111 +66,53 @@ export class UltimateLockHead {
             weaponYMultiplier = 1.1; 
         } else if (isAR) {
             weaponXMultiplier = 0.9;  
-            weaponYMultiplier = 1.4;  
+            weaponYMultiplier = 1.25;  
         } else if (isOneTap) {
             weaponXMultiplier = 1.5; 
             weaponYMultiplier = 2.0; 
         }
 
-        let targetY = 0;
-        let trackX = 0;
-        let power = 0;
-
-        // --- 1. PREDIÇÃO DE TRAJETÓRIA LINEAR (COMPENSAÇÃO DE PING E MOVIMENTO) ---
-        const simulatedPingMs = 45.0; // Simulando latência média do jogador
-        const pingCompensation = simulatedPingMs / 1000.0;
+        // --- PREDIÇÃO DE MOVIMENTO (LEAD AIMBOT) ---
+        // Compensa Ping e Velocidade com base na distância
+        const pingCompensation = 0.045; // 45ms average
+        const leadFactor = Math.min(distance * 0.015, 1.5);
         
-        // Posição Futura: Acelera o tracking baseado na velocidade real somada ao ping
-        const predictedVelX = enemyVelX + (enemyVelX * pingCompensation);
-        const predictedVelY = enemyVelY + (enemyVelY * pingCompensation);
+        const predictedVelX = enemyVelX + (enemyVelX * pingCompensation * leadFactor);
 
-        // Momentum Factor
-        const enemyVelocityMag = Math.sqrt(predictedVelX * predictedVelX + predictedVelY * predictedVelY);
-        const headshotMomentum = 1.0 + (enemyVelocityMag * 0.085);
+        // --- CÁLCULO FINAL DE TRAVA (PULL) ---
+        // trackX: o quanto vamos puxar o tiro na horizontal (em unidades do mundo)
+        // targetY: o quanto vamos subir a mira do ponto atual (em unidades do mundo)
+        
+        let trackX = predictedVelX * 0.5 * weaponXMultiplier;
+        
+        // Em vez de retornar posições bizarras (-12000), aplicamos a subida exata para a cabeça, 
+        // e deixamos o `power` controlar a "velocidade" da injeção se for interpolação.
+        // Puxão Magnético (Painel Famosos)
+        let exactRise = (targetBoneOffset * magneticPull) * weaponYMultiplier;
 
-        // --- PLAYER STATE DYNAMIC SCALING ---
-        let stateMultiplier = 1.0;
-        if (playerState === 'RUN' || playerState === 'JUMP') {
-            stateMultiplier = 1.60;
-        } else if (playerState === 'CROUCH' || playerState === 'PRONE') {
-            stateMultiplier = 0.85;
-        }
-
-        // --- DISTANCE LOGARITHMIC SCALING ---
-        const safeDistance = Math.max(2.0, distance);
-        const logDistanceScale = Math.max(1.5, 10.0 - Math.log(safeDistance));
-        const precisionAimTrack = Math.max(0.1, 1.0 / Math.log10(safeDistance + 1));
-
-        // --- 2. TRAVA DE VETOR (BONE ID: 01 / HEAD) & CURVA DE SUAVIZAÇÃO ---
-        const EXACT_HEAD_Y = -45.0;
-        const distanceToHead = Math.abs(currentY - EXACT_HEAD_Y);
-
-        // Se estamos a mais de 15 units de distância da cabeça (Aceleração Máxima)
-        if (distanceToHead > 15.0) {
-            if (currentY > EXACT_HEAD_Y) {
-                // Mira abaixo da cabeça: PUXADA POTENTE PARA CIMA
-                targetY = -12000.0 * varianceAggression * stabilitySmoothing * logDistanceScale * headshotMomentum * stateMultiplier * weaponYMultiplier;
-                power = 120000.0 * logDistanceScale * headshotMomentum;
-            } else {
-                // Mira acima da cabeça: EMPURRÃO PARA BAIXO
-                targetY = 9000.0 * varianceAggression * stabilitySmoothing * logDistanceScale * stateMultiplier * weaponYMultiplier; 
-                power = 120000.0 * logDistanceScale;
-            }
-            // Tracking preditivo severo enquanto puxa
-            trackX = predictedVelX * 0.5 * weaponXMultiplier * precisionAimTrack;
-
-        } else {
-            // --- 3. DAMPING LOGARÍTMICO (SUAVIZAÇÃO DINÂMICA < 5% DISTÂNCIA) ---
-            // Entramos na hitbox da cabeça. Congela e gruda!
-            
-            // Fator de amortecimento forte para evitar oscilação (Tremores)
-            const dampingFactor = 0.15; 
-            
-            targetY = (EXACT_HEAD_Y - currentY) * 500.0 * dampingFactor; // Micro-correção perfeita
-            power = 99999999.0; // FIXAÇÃO ABSOLUTA (Não solta mais)
-
-            // Randomização de Micro-movimentos (Anti-Detecção) simulando ruído orgânico 
-            // dentro de uma faixa indetectável (+- 0.05 no Pixel)
-            const organicNoiseY = (Math.random() - 0.5) * 0.1;
-            const organicNoiseX = (Math.random() - 0.5) * 0.1;
-
-            targetY += organicNoiseY;
-            trackX = (predictedVelX * 0.95 * precisionAimTrack) + organicNoiseX; // Acompanha 95% do mov future + ruído
-        }
-
-        // --- 4. MODIFICADORES DE DISTÂNCIA EXTREMA ---
-        if (distance < 30) {
-            power *= 1.30;   
-            targetY *= 1.5;  
-            if (distanceToHead > 15.0) trackX = predictedVelX * 1.8; 
-        } else if (distance > 200) {
-            targetY *= 0.65; 
-            trackX *= 0.70;
-        }
-
+        // Se for arma de 1 tiro, o boneco sobe a mira agressivamente pra cabeça no primeiro clique
         if (isOneTap) {
-            power *= 2.5; 
+            exactRise *= 1.35; 
         }
 
-        // --- 5. OVERSHOOT PROTECTION (SEGURO CONTRA PINADA) ---
-        if (targetY < -30000.0) {
-            power *= 0.5; 
-            targetY *= 0.7; 
-        }
+        // Randomização Orgânica (Aim Smoothness / Anti-Cheat)
+        // Valores entre -0.015 e +0.015 para parecer natural
+        const organicNoiseX = (Math.random() - 0.5) * 0.03;
+        const organicNoiseY = (Math.random() - 0.5) * 0.02;
 
         return {
-            x: trackX,
-            y: targetY,
-            power: power
+            x: trackX + organicNoiseX,
+            y: exactRise + organicNoiseY,
+            power: configTarget === 'HEAD' ? 2.5 : 1.0 // Multiplicador de força na Engine
         };
     }
 
     static getPayload() {
         return `
-            [EXECUTION_HACK_MODE_ACTIVE]
-            BRUTE_FORCE_HEAD_SNAP=TRUE
-            CHEST_LOCK=DESTROYED
-            RECOIL=FROZEN_ON_HEAD
+            [VIP_PANEL_INJECT_V2]
+            SMART_BONE_TRACKING=ACTIVE
+            ANTI_CHEST_LOCK=BYPASSED
+            PULL_INTENSITY=DYNAMIC
         `;
     }
 }

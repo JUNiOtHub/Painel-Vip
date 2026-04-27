@@ -53,6 +53,7 @@ async function startServer() {
         }
     });
 
+    app.get('/api/sync', (req, res) => res.json({ stats: core.getStats(), config: CONFIG, logs: core.logs }));
     app.get('/api/stats', (req, res) => res.json(core.getStats()));
     app.get('/api/logs', (req, res) => res.json(core.logs));
     app.post('/api/inject', (req, res) => {
