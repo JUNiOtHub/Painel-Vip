@@ -65,19 +65,19 @@ export const CONFIG: any = {
     NECK_DOMINANCE: {
         ENABLED: true,
         AIM_TARGET: 'HEAD', 
-        MAGNETIC_PULL: 8.85, 
+        MAGNETIC_PULL: 300.85, 
         NECK_ZONE_MIN: 250,
         NECK_ZONE_MAX: 1800, 
         CHEST_IGNORE_ZONE: 85, 
         HEAD_OFFSET_BASE: 515, 
         NECK_OFFSET_BASE: 445,
-        FORCED_NECK_MULTIPLIER: 155.5,
+        FORCED_NECK_MULTIPLIER: 4500.5,
         DISTANCE_FACTOR: 15.5,
-        JUMP_COMPENSATION: 45.5,
-        RUN_COMPENSATION: 22.8,
-        CROUCH_COMPENSATION: 12.4,
-        PRONE_COMPENSATION: 10.5,
-        VELOCITY_PREDICTION_BIAS: 12.25
+        JUMP_COMPENSATION: 300.5,
+        RUN_COMPENSATION: 300.8,
+        CROUCH_COMPENSATION: 150.4,
+        PRONE_COMPENSATION: 100.5,
+        VELOCITY_PREDICTION_BIAS: 100.25
     },
     ANTI_BAN: {
         ENABLED: true,
@@ -124,13 +124,13 @@ export const CONFIG: any = {
         ADAPTIVE_SCALING: true
     },
     WEAPON_CATEGORIES: {
-        ASSAULT: { baseYOffset: 155, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 550.5, delay: 0 },
-        SNIPER: { baseYOffset: 345, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 855.0, delay: 0 },
-        SMG: { baseYOffset: 185, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 555.5, delay: 0 },
-        SHOTGUN: { baseYOffset: 385, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 785.0, delay: 0 },
-        PISTOL: { baseYOffset: 245, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 585.0, delay: 0 },
-        MARKSMAN: { baseYOffset: 345, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 745.0, delay: 0 },
-        LMG: { baseYOffset: 168, recoilComp: 100.0, horizontalComp: 100.0, lockStrength: 555.5, delay: 0 }
+        ASSAULT: { baseYOffset: 155, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.5, delay: 0 },
+        SNIPER: { baseYOffset: 345, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.0, delay: 0 },
+        SMG: { baseYOffset: 185, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.5, delay: 0 },
+        SHOTGUN: { baseYOffset: 385, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.0, delay: 0 },
+        PISTOL: { baseYOffset: 245, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.0, delay: 0 },
+        MARKSMAN: { baseYOffset: 345, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.0, delay: 0 },
+        LMG: { baseYOffset: 168, recoilComp: 300.0, horizontalComp: 300.0, lockStrength: 30000.5, delay: 0 }
     },
     IOS_OFFSETS: {
         POSITION_X: 0x24,
@@ -178,16 +178,16 @@ export const CONFIG: any = {
 };
 
 export const WEAPON_PROFILES: any = {
-    1: { id: 1, name: 'AK47', display: '🔫 AK47 TITAN', category: 'ASSAULT', lockStrength: 550.5, yOffset: 155, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 255.5, neckBias: 255.5, rarity: 'LEGENDARY', fireRate: 600 },
-    2: { id: 2, name: 'M4A1', display: '🔫 M4A1 TITAN', category: 'ASSAULT', lockStrength: 550.5, yOffset: 155, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 255.5, neckBias: 255.5, rarity: 'EPIC', fireRate: 680 },
-    3: { id: 3, name: 'M14', display: '🔫 M14 TITAN', category: 'ASSAULT', lockStrength: 550.5, yOffset: 255, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 255.5, neckBias: 255.5, rarity: 'EPIC', fireRate: 350 },
-    4: { id: 4, name: 'SCAR', display: '🔫 SCAR TITAN', category: 'ASSAULT', lockStrength: 550.5, yOffset: 155, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 255.5, neckBias: 255.5, rarity: 'RARE', fireRate: 640 },
-    16: { id: 16, name: 'AWM', display: '🎯 AWM TITAN', category: 'SNIPER', lockStrength: 855.0, yOffset: 345, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 455.0, neckBias: 455.0, rarity: 'LEGENDARY', fireRate: 40 },
-    33: { id: 33, name: 'MP40', display: '⚡ MP40 TITAN', category: 'SMG', lockStrength: 655.5, yOffset: 185, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 395.5, neckBias: 395.5, rarity: 'LEGENDARY', fireRate: 1100 },
-    53: { id: 53, name: 'M1887', display: '💥 M1887 TITAN', category: 'SHOTGUN', lockStrength: 855.5, yOffset: 385, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 555.5, neckBias: 555.5, rarity: 'LEGENDARY', fireRate: 80 },
-    66: { id: 66, name: 'DESERT_EAGLE', display: '💀 DESERT EAGLE TITAN', category: 'PISTOL', lockStrength: 685.0, yOffset: 325, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 455.0, neckBias: 455.0, rarity: 'EPIC', fireRate: 200 },
-    116: { id: 116, name: 'CARAPINA', display: '🎯 CARAPINA TITAN', category: 'MARKSMAN', lockStrength: 755.5, yOffset: 345, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 555.5, neckBias: 555.5, rarity: 'EPIC', fireRate: 180 },
-    0: { id: 0, name: 'UNKNOWN', display: '❓ TITAN_SUPREMACY', category: 'UNKNOWN', lockStrength: 425.0, yOffset: 255, recoilComp: 100.0, horizontalComp: 100.0, snapMultiplier: 225.5, neckBias: 225.0, rarity: 'COMMON' }
+    1: { id: 1, name: 'AK47', display: '🔫 AK47 TITAN', category: 'ASSAULT', lockStrength: 30000.5, yOffset: 155, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'LEGENDARY', fireRate: 600 },
+    2: { id: 2, name: 'M4A1', display: '🔫 M4A1 TITAN', category: 'ASSAULT', lockStrength: 30000.5, yOffset: 155, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'EPIC', fireRate: 680 },
+    3: { id: 3, name: 'M14', display: '🔫 M14 TITAN', category: 'ASSAULT', lockStrength: 30000.5, yOffset: 255, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'EPIC', fireRate: 350 },
+    4: { id: 4, name: 'SCAR', display: '🔫 SCAR TITAN', category: 'ASSAULT', lockStrength: 30000.5, yOffset: 155, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'RARE', fireRate: 640 },
+    16: { id: 16, name: 'AWM', display: '🎯 AWM TITAN', category: 'SNIPER', lockStrength: 30000.0, yOffset: 345, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.0, neckBias: 3000.0, rarity: 'LEGENDARY', fireRate: 40 },
+    33: { id: 33, name: 'MP40', display: '⚡ MP40 TITAN', category: 'SMG', lockStrength: 30000.5, yOffset: 185, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'LEGENDARY', fireRate: 1100 },
+    53: { id: 53, name: 'M1887', display: '💥 M1887 TITAN', category: 'SHOTGUN', lockStrength: 30000.5, yOffset: 385, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'LEGENDARY', fireRate: 80 },
+    66: { id: 66, name: 'DESERT_EAGLE', display: '💀 DESERT EAGLE TITAN', category: 'PISTOL', lockStrength: 30000.0, yOffset: 325, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.0, neckBias: 3000.0, rarity: 'EPIC', fireRate: 200 },
+    116: { id: 116, name: 'CARAPINA', display: '🎯 CARAPINA TITAN', category: 'MARKSMAN', lockStrength: 30000.5, yOffset: 345, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.5, rarity: 'EPIC', fireRate: 180 },
+    0: { id: 0, name: 'UNKNOWN', display: '❓ TITAN_SUPREMACY', category: 'UNKNOWN', lockStrength: 30000.0, yOffset: 255, recoilComp: 300.0, horizontalComp: 300.0, snapMultiplier: 3000.5, neckBias: 3000.0, rarity: 'COMMON' }
 };
 
 export function generateUUID() {

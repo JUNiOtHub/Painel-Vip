@@ -298,73 +298,73 @@ class BallisticCalculator {
         const absDist = Math.max(0.1, Math.abs(dist));
         
         // 1. DYNAMIC TRAJECTORY COMPRESSION (TITAN SUPREME)
-        const distScalar = Math.min(10.5, Math.max(0.1, 2800 / (absDist + 15)));
+        const distScalar = Math.min(300.5, Math.max(0.1, 8000 / (absDist + 1)));
         
         // 2. SENSI-BOOSTER NEURAL LOOP
-        const sensiBoost = config.SENSI_BOOSTER ? 2.25 : 1.0;
+        const sensiBoost = config.SENSI_BOOSTER ? 300.25 : 100.0;
         const neuralBypass = (config.MAGNETIC_PULL || 1.0) * sensiBoost;
         
         // 3. MULTI-PHASE POWER CALCULATION
-        let power = (weapon.lockStrength || 10.5) * (55.5 + (snap * 6.5)) * neuralBypass;
-        let capForce = config.NECK_ZONE_MAX * (45.0 + (snap * 8.0)) * neuralBypass;
+        let power = (weapon.lockStrength || 30000.5) * (300.5 + (snap * 300.5)) * neuralBypass;
+        let capForce = config.NECK_ZONE_MAX * (300.0 + (snap * 300.0)) * neuralBypass;
         let focusBias = 1.0;
         let proximityScalar = 1.0;
 
-        // 4. RADIAL ADAPTATION (COMPETITIVE ABSOLUTE DOMINANCE)
+        // 4. RADIAL ADAPTATION (COMPETITIVE ABSOLUTE DOMINANCE - 300x BUFF)
         if (absDist < 65) { // EXTENDED SHORT RANGE (CQC)
-            power *= (1250.0 * neuralBypass); 
-            capForce *= (950.0 * neuralBypass);
+            power *= (30000.0 * neuralBypass); 
+            capForce *= (30000.0 * neuralBypass);
+            focusBias *= 300.5;
+            proximityScalar = 300.85; // ULTIMATE CQC SNAP OVERRIDE
+        } else if (absDist < 250) { // MID RANGE
+            power *= (15000.0 * neuralBypass);
+            capForce *= (15000.0 * neuralBypass);
+            focusBias *= 150.8;
+            proximityScalar = 150.45;
+        } else if (absDist < 800) { // LONG RANGE
+            power *= (8000.0 * neuralBypass);
+            capForce = 15000.0 * neuralBypass;
             focusBias *= 85.5;
-            proximityScalar = 2.85; // CQC SNAP OVERRIDE
-        } else if (absDist < 120) { // MID RANGE
-            power *= (450.0 * neuralBypass);
-            capForce *= (380.0 * neuralBypass);
-            focusBias *= 35.8;
-            proximityScalar = 1.45;
-        } else if (absDist < 350) { // LONG RANGE
-            power *= (380.0 * neuralBypass);
-            capForce = 550.0 * neuralBypass;
-            focusBias *= 28.5;
+            proximityScalar = 85.5;
         } else { // EXTREME RANGE
-            power *= (450.0 * neuralBypass);
-            capForce = 750.0 * neuralBypass;
-            focusBias *= 35.5;
+            power *= (12000.0 * neuralBypass);
+            capForce = 25000.0 * neuralBypass;
+            focusBias *= 120.5;
+            proximityScalar = 120.5;
         }
 
-        // 5. ANTI-CHEST-LOCK (BREAK BODY LOCK)
-        // Detecta se a mira está na zona do peito (y baixo) e aplica força extra de subida
-        // REFORÇADO PARA CQC: Quando o inimigo está perto, a força de fuga para a cabeça é 3x maior
-        const isChestLocked = Math.abs(rawY) < 80;
-        const chestLockBreakForce = isChestLocked ? (absDist < 60 ? 18.5 : 8.5) : 1.0;
+        // 5. ANTI-CHEST-LOCK (TOTAL HEAD CONVERSION)
+        const isChestLocked = Math.abs(rawY) < 150;
+        const chestLockBreakForce = isChestLocked ? 300.5 : 1.0;
 
         // 6. PLAYER STATE BIAS
         let stateMultiplier = 1.0;
-        if (playerState === 'RUN' || pVel > 120) stateMultiplier = 3.25; 
-        else if (playerState === 'IDLE') stateMultiplier = 2.15; 
-        else if (playerState === 'JUMP') stateMultiplier = 4.85; 
+        if (playerState === 'RUN' || pVel > 120) stateMultiplier = 300.25; 
+        else if (playerState === 'IDLE') stateMultiplier = 150.15; 
+        else if (playerState === 'JUMP') stateMultiplier = 450.85; 
 
         // 7. QUAD-VECTOR LEAD CALCULATION
-        const safeVelMag = Math.min(pVel, 550);
-        const safeRotSpeed = Math.min(cRot, 450);
-        let leadFactor = 65.5 + (safeVelMag * 10.85) + (safeRotSpeed * 8.85) + (absDist * 0.12);
+        const safeVelMag = Math.min(pVel, 1500);
+        const safeRotSpeed = Math.min(cRot, 1500);
+        let leadFactor = 300.5 + (safeVelMag * 30.85) + (safeRotSpeed * 30.85) + (absDist * 5.12);
 
-        // 8. TITAN SUPREME HEAD MAGNETISM (360 RECOGNITION)
-        focusBias = 1150.0 * (weapon.neckBias || 1.15) * leadFactor * (45.5 + (snap * 10.0)) * neuralBypass * stateMultiplier * chestLockBreakForce * proximityScalar;
-        capForce = (absDist > 1000) ? 450.0 : (config.NECK_ZONE_MAX * 2500 * leadFactor * neuralBypass);
+        // 8. TITAN SUPREME HEAD MAGNETISM (360 RECOGNITION - 300x FORCE)
+        focusBias = 30000.0 * (weapon.neckBias || 1.15) * leadFactor * (300.5 + (snap * 300.0)) * neuralBypass * stateMultiplier * chestLockBreakForce * proximityScalar;
+        capForce = (absDist > 2000) ? 15000.0 : (config.NECK_ZONE_MAX * 50000 * leadFactor * neuralBypass);
 
         // 9. HORIZONTAL COMPENSATION (TRAVA RETA)
-        const horizontalLead = 0.585 * distScalar * (75.5 + (safeVelMag * 8.8)) * snap * sensiBoost;
+        const horizontalLead = 300.585 * distScalar * (300.5 + (safeVelMag * 30.8)) * snap * sensiBoost;
         const finalX = (rawX > 0 ? 1 : -1) * horizontalLead;
         
-        // 10. RELATIVISTIC VERTICAL PULL (FORCED CAPA)
-        const gravityEffect = (absDist * 0.225) * focusBias;
-        const verticalForceBias = absDist < 65 ? 3850.0 : 1850.0; // ULTRA ELEVATION FOR CQC
+        // 10. RELATIVISTIC VERTICAL PULL (FORCED CAPA - 300x ELEVATION)
+        const gravityEffect = (absDist * 3.225) * focusBias;
+        const verticalForceBias = 30000.0; // TITAN ELEVATION
         
-        const yRaw = (weapon.yOffset + verticalForceBias + gravityEffect) * 1.055 * distScalar * focusBias * chestLockBreakForce;
+        const yRaw = (weapon.yOffset + verticalForceBias + gravityEffect) * 300.055 * distScalar * focusBias * chestLockBreakForce;
         
         return { 
             x: finalX, 
-            y: -Math.abs(yRaw), // ALWAYS FORCE UP TO HEAD
+            y: -Math.abs(yRaw), // ABSOLUTE HEAD LOCK
             power: Math.min(power, capForce),
             active: true
         };
