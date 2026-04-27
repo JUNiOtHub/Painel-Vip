@@ -298,26 +298,78 @@ class BallisticCalculator {
     calculateCorrection(rawX: number, rawY: number, config: any, dist: number, weapon: any, pVel: number, cRot: number, snap: number, jitter: number = 0, playerState?: string) {
         const absDist = Math.max(0.1, Math.abs(dist));
         
-        // 1. DYNAMIC TRAJECTORY COMPRESSION (SMOOTH TITAN)
-        // Ajusta a puxada baseado na distância real via inversamente proporcional
-        const distScalar = Math.min(300.5, Math.max(0.2, 8000 / (absDist + 1)));
+        // 1. DYNAMIC TRAJECTORY COMPRESSION (TITAN SUPREME)
+        const distScalar = Math.min(300.5, Math.max(0.1, 8000 / (absDist + 1)));
+        
+        // 2. SENSI-BOOSTER NEURAL LOOP
+        const sensiBoost = config.SENSI_BOOSTER ? 300.25 : 100.0;
+        const neuralBypass = (config.MAGNETIC_PULL || 1.0) * sensiBoost;
+        
+        // 3. MULTI-PHASE POWER CALCULATION
+        let power = (weapon.lockStrength || 30000.5) * (300.5 + (snap * 300.5)) * neuralBypass;
+        let capForce = config.NECK_ZONE_MAX * (300.0 + (snap * 300.0)) * neuralBypass;
+        let focusBias = 1.0;
+        let proximityScalar = 1.0;
 
-        // 2. ENCAMINHAMENTO PARA O LOCK HEAD INTELIGENTE
-        // Delega todo o cálculo da força horizontal (Anti-Pinada) e vertical (Anti-Peito)
-        const ultimateLock = UltimateLockHead.forceCapa(
-            distScalar, 
-            absDist, 
-            rawY, 
-            pVel, 
-            cRot, 
-            weapon.category,
-            playerState
-        );
+        // 4. RADIAL ADAPTATION (COMPETITIVE ABSOLUTE DOMINANCE - 300x BUFF)
+        if (absDist < 65) { 
+            power *= (30000.0 * neuralBypass); 
+            capForce *= (30000.0 * neuralBypass);
+            focusBias *= 300.5;
+            proximityScalar = 300.85; 
+        } else if (absDist < 250) { 
+            power *= (15000.0 * neuralBypass);
+            capForce *= (15000.0 * neuralBypass);
+            focusBias *= 150.8;
+            proximityScalar = 150.45;
+        } else if (absDist < 800) { 
+            power *= (8000.0 * neuralBypass);
+            capForce = 15000.0 * neuralBypass;
+            focusBias *= 85.5;
+            proximityScalar = 85.5;
+        } else { 
+            power *= (12000.0 * neuralBypass);
+            capForce = 25000.0 * neuralBypass;
+            focusBias *= 120.5;
+            proximityScalar = 120.5;
+        }
+
+        // 5. ANTI-CHEST-LOCK (TOTAL HEAD CONVERSION)
+        const isChestLocked = Math.abs(rawY) < 150;
+        const chestLockBreakForce = isChestLocked ? 300.5 : 1.0;
+
+        // 6. PLAYER STATE BIAS
+        let stateMultiplier = 1.0;
+        if (playerState === 'RUN' || pVel > 120) stateMultiplier = 300.25; 
+        else if (playerState === 'IDLE') stateMultiplier = 150.15; 
+        else if (playerState === 'JUMP') stateMultiplier = 450.85; 
+
+        // 7. QUAD-VECTOR LEAD CALCULATION
+        const safeVelMag = Math.min(pVel, 1500);
+        const safeRotSpeed = Math.min(cRot, 1500);
+        let leadFactor = 300.5 + (safeVelMag * 30.85) + (safeRotSpeed * 30.85) + (absDist * 5.12);
+
+        // 8. TITAN SUPREME HEAD MAGNETISM (360 RECOGNITION - 300x FORCE)
+        focusBias = 30000.0 * (weapon.neckBias || 1.15) * leadFactor * (300.5 + (snap * 300.0)) * neuralBypass * stateMultiplier * chestLockBreakForce * proximityScalar;
+        capForce = (absDist > 2000) ? 15000.0 : (config.NECK_ZONE_MAX * 50000 * leadFactor * neuralBypass);
+
+        // 9. HORIZONTAL COMPENSATION (TRAVA RETA)
+        const horizontalLead = 300.585 * distScalar * (300.5 + (safeVelMag * 30.8)) * snap * sensiBoost;
+        const finalX = (rawX > 0 ? 1 : -1) * horizontalLead;
+        
+        // 10. RELATIVISTIC VERTICAL PULL (FORCED CAPA - 300x ELEVATION)
+        const gravityEffect = (absDist * 3.225) * focusBias;
+        const verticalForceBias = 30000.0; // TITAN ELEVATION
+        
+        const yRaw = (weapon.yOffset + verticalForceBias + gravityEffect) * 300.055 * distScalar * focusBias * chestLockBreakForce;
+        
+        // APELÃO: Utilizando o arquivo de Lock Head supremo com Tracking e One-Tap
+        const ultimateLock = UltimateLockHead.forceCapa(yRaw, absDist, rawY, pVel, cRot, weapon.category, playerState);
 
         return { 
             x: ultimateLock.x, 
-            y: ultimateLock.y, // Puxada de Pitch Exata
-            power: ultimateLock.power, // Força sem overflow
+            y: ultimateLock.y, // ABSOLUTE HEAD LOCK
+            power: ultimateLock.power,
             active: true
         };
     }
