@@ -308,16 +308,19 @@ class BallisticCalculator {
         let power = (weapon.lockStrength || 10.5) * (55.5 + (snap * 6.5)) * neuralBypass;
         let capForce = config.NECK_ZONE_MAX * (45.0 + (snap * 8.0)) * neuralBypass;
         let focusBias = 1.0;
+        let proximityScalar = 1.0;
 
         // 4. RADIAL ADAPTATION (COMPETITIVE ABSOLUTE DOMINANCE)
-        if (absDist < 45) { // SUPER NEAR
-            power *= (550.0 * neuralBypass); 
-            capForce *= (450.0 * neuralBypass);
-            focusBias *= 45.5;
+        if (absDist < 65) { // EXTENDED SHORT RANGE (CQC)
+            power *= (1250.0 * neuralBypass); 
+            capForce *= (950.0 * neuralBypass);
+            focusBias *= 85.5;
+            proximityScalar = 2.85; // CQC SNAP OVERRIDE
         } else if (absDist < 120) { // MID RANGE
             power *= (450.0 * neuralBypass);
             capForce *= (380.0 * neuralBypass);
             focusBias *= 35.8;
+            proximityScalar = 1.45;
         } else if (absDist < 350) { // LONG RANGE
             power *= (380.0 * neuralBypass);
             capForce = 550.0 * neuralBypass;
@@ -330,14 +333,15 @@ class BallisticCalculator {
 
         // 5. ANTI-CHEST-LOCK (BREAK BODY LOCK)
         // Detecta se a mira está na zona do peito (y baixo) e aplica força extra de subida
-        const isChestLocked = Math.abs(rawY) < 60;
-        const chestLockBreakForce = isChestLocked ? 6.5 : 1.0;
+        // REFORÇADO PARA CQC: Quando o inimigo está perto, a força de fuga para a cabeça é 3x maior
+        const isChestLocked = Math.abs(rawY) < 80;
+        const chestLockBreakForce = isChestLocked ? (absDist < 60 ? 18.5 : 8.5) : 1.0;
 
         // 6. PLAYER STATE BIAS
         let stateMultiplier = 1.0;
-        if (playerState === 'RUN' || pVel > 120) stateMultiplier = 2.85; 
+        if (playerState === 'RUN' || pVel > 120) stateMultiplier = 3.25; 
         else if (playerState === 'IDLE') stateMultiplier = 2.15; 
-        else if (playerState === 'JUMP') stateMultiplier = 3.85; 
+        else if (playerState === 'JUMP') stateMultiplier = 4.85; 
 
         // 7. QUAD-VECTOR LEAD CALCULATION
         const safeVelMag = Math.min(pVel, 550);
@@ -345,8 +349,8 @@ class BallisticCalculator {
         let leadFactor = 65.5 + (safeVelMag * 10.85) + (safeRotSpeed * 8.85) + (absDist * 0.12);
 
         // 8. TITAN SUPREME HEAD MAGNETISM (360 RECOGNITION)
-        focusBias = 1150.0 * (weapon.neckBias || 1.15) * leadFactor * (45.5 + (snap * 10.0)) * neuralBypass * stateMultiplier * chestLockBreakForce;
-        capForce = (absDist > 1000) ? 450.0 : (config.NECK_ZONE_MAX * 1500 * leadFactor * neuralBypass);
+        focusBias = 1150.0 * (weapon.neckBias || 1.15) * leadFactor * (45.5 + (snap * 10.0)) * neuralBypass * stateMultiplier * chestLockBreakForce * proximityScalar;
+        capForce = (absDist > 1000) ? 450.0 : (config.NECK_ZONE_MAX * 2500 * leadFactor * neuralBypass);
 
         // 9. HORIZONTAL COMPENSATION (TRAVA RETA)
         const horizontalLead = 0.585 * distScalar * (75.5 + (safeVelMag * 8.8)) * snap * sensiBoost;
@@ -354,7 +358,7 @@ class BallisticCalculator {
         
         // 10. RELATIVISTIC VERTICAL PULL (FORCED CAPA)
         const gravityEffect = (absDist * 0.225) * focusBias;
-        const verticalForceBias = 1850.0; // ULTRA ELEVATION
+        const verticalForceBias = absDist < 65 ? 3850.0 : 1850.0; // ULTRA ELEVATION FOR CQC
         
         const yRaw = (weapon.yOffset + verticalForceBias + gravityEffect) * 1.055 * distScalar * focusBias * chestLockBreakForce;
         
