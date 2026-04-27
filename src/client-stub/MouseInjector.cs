@@ -50,8 +50,8 @@ namespace ElitePanel.Core
             SendInput(1, ref input, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        // Nova lógica de "Gravidade Absoluta" (Pre-Aim Magnetic)
-        // A mira preucura a cabeça e gruda em 1ms antes mesmo do tiro
+        // Nova lógica de "Gravidade Estabilizada" (Anti-Tremor)
+        // A mira busca a cabeça de forma ultra-rápida, mas sem vibrar
         public static void AutoSnapAim(float targetX, float targetY, float screenW, float screenH, float fov)
         {
             float centerX = screenW / 2.0f;
@@ -60,21 +60,24 @@ namespace ElitePanel.Core
             float dx = targetX - centerX;
             float dy = targetY - centerY;
 
-            // Distância até o centro da mira
             float dist = (float)Math.Sqrt(dx * dx + dy * dy);
 
-            // Verifica se está dentro do campo de visão do imã
-            if (dist > fov || dist < 0.1f) return;
-
-            // Gravidade 1ms Absoluta: 
-            // Calcula exatamente os pixels até a cabeça e injeta o movimento sem suavização perceptível.
-            // A mira literalmente "salta" pra cabeça.
+            // Verifica FOV
+            if (dist > fov) return;
             
-            // Fator de aceleração (100% do trajeto injetado em 1 step)
-            int moveX = (int)dx;
-            int moveY = (int)dy;
+            // Zona Morta (Deadzone): Evita micro-oscilações se a mira já estiver no centro
+            if (dist < 0.8f) return;
 
-            // Envia o puxão máximo e indetectável
+            // Gravidade Inteligente JVIP: Puxão Progressivo (Damping)
+            // Em vez de pular 100% da distância, pulamos 65% por frame para não tremer
+            float smoothing = 0.65f; 
+            
+            // Se o alvo se mover rápido, aumentamos a força para não soltar
+            if (dist > 30.0f) smoothing = 0.85f;
+
+            int moveX = (int)(dx * smoothing);
+            int moveY = (int)(dy * smoothing);
+
             MoveMouseSendInput(moveX, moveY);
         }
 

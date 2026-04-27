@@ -72,23 +72,50 @@ export class UltimateLockHead {
             weaponYMultiplier = 2.0; 
         }
 
-        // --- PREDIÇÃO DE MOVIMENTO (LEAD AIMBOT) ---
-        // Compensa Ping e Velocidade com base na distância
-        const pingCompensation = 0.045; // 45ms average
-        const leadFactor = Math.min(distance * 0.015, 1.5);
+        // --- PREDIÇÃO DE MOVIMENTO AVANÇADA (BALLISTICS & LEAD AIM) ---
+        // Compensa Ping, Velocidade e Distância (Bullet Travel Time)
+        const pingMs = 35.0; // Otimizado
+        const bulletSpeed = 950.0; 
+        const timeToTarget = (distance / bulletSpeed) + (pingMs / 1000.0);
         
-        const predictedVelX = enemyVelX + (enemyVelX * pingCompensation * leadFactor);
+        const velocityMagnitude = Math.sqrt(enemyVelX * enemyVelX + enemyVelY * enemyVelY);
+        const accelerationBias = Math.abs(velocityMagnitude - (this.recentVelYHistory[0] || 0));
+        
+        // Fator JVIP V4: Lead adaptativo com suavização
+        const dynamicLead = 1.0 + (velocityMagnitude * 0.20) + (accelerationBias * 0.06);
+
+        const predictedVelX = enemyVelX * timeToTarget * dynamicLead;
+        const predictedVelY = enemyVelY * timeToTarget * dynamicLead;
 
         // --- CÁLCULO FINAL DE TRAVA (PULL) ---
-        // trackX: o quanto vamos puxar o tiro na horizontal (em unidades do mundo)
-        // targetY: o quanto vamos subir a mira do ponto atual (em unidades do mundo)
+        // ANTI-TREMOR: Em vez de puxar tudo de uma vez, usamos um fator de interpolação
+        const lerpFactor = 0.55; // 55% da distância por tick (Suave mas rápido)
         
-        let trackX = predictedVelX * 0.5 * weaponXMultiplier;
+        let trackX = (predictedVelX * weaponXMultiplier * 2.15) * lerpFactor;
         
-        // Em vez de retornar posições bizarras (-12000), aplicamos a subida exata para a cabeça, 
-        // e deixamos o `power` controlar a "velocidade" da injeção se for interpolação.
-        // Puxão Magnético (Painel Famosos)
-        let exactRise = (targetBoneOffset * magneticPull) * weaponYMultiplier;
+        // ANTI-CHEST ANCHOR: Se a mira detectar que está grudada no peito (targetBoneOffset baixo),
+        // aplicamos uma força extra de ejeção vertical para forçar a subida.
+        let upwardForce = targetBoneOffset * magneticPull;
+        
+        // Se a mira estiver "estacionária" no peito, multiplicamos a subida
+        if (targetBoneOffset > 0.5 && distance < 100) {
+            upwardForce *= 1.25; // Ejeção VIP para subir capa rápido
+        }
+
+        let exactRise = (upwardForce * weaponYMultiplier * lerpFactor);
+        exactRise += (predictedVelY * 1.35); // Predição vertical refinada
+
+        // Redução de Tremor em alvos em alta velocidade
+        if (velocityMagnitude > 10) {
+            trackX *= 0.95; 
+            exactRise *= 0.98;
+        }
+
+        // Se o inimigo estiver muito longe, o lead precisa ser agressivo mas estável
+        if (distance > 120) {
+            trackX *= 1.15;
+            exactRise *= 1.05;
+        }
 
         // Se for arma de 1 tiro, o boneco sobe a mira agressivamente pra cabeça no primeiro clique
         if (isOneTap) {

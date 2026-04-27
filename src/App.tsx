@@ -208,10 +208,10 @@ export default function App() {
                 <Fingerprint className="w-10 h-10 text-amber-500" />
               </motion.div>
               <h1 className="text-4xl font-black tracking-tighter text-white uppercase italic">
-                PAINEL <span className="text-amber-500">VIP</span>
+                PAINEL <span className="text-amber-500">JVIP</span>
               </h1>
               <p className="text-[9px] font-mono tracking-[0.6em] text-amber-500 mt-2 uppercase">
-                DOS FAMOSOS - EXCLUSIVE CLUB
+                EXCLUSIVO - JUNIOR VIP CLUB
               </p>
             </div>
 
@@ -287,19 +287,43 @@ export default function App() {
       <div className="min-h-screen bg-black text-amber-500 flex flex-col items-center justify-center font-mono relative overflow-hidden">
         <div className="absolute inset-0 scanline opacity-20" />
         <motion.div
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="text-2xl font-black tracking-tighter"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+          className="text-2xl font-black tracking-tighter italic"
         >
-          VIP_AUTHENTICATING...
+          SYNC_IN_PROGRESS_V4...
         </motion.div>
-        <div className="w-64 h-1 bg-neutral-900 rounded-full mt-6 relative overflow-hidden">
+        <div className="w-72 h-0.5 bg-neutral-900 rounded-full mt-8 relative overflow-hidden">
           <motion.div
             initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            className="absolute inset-0 w-32 bg-amber-500"
+            animate={{ x: "200%" }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="absolute inset-0 w-32 bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.5)]"
           />
+        </div>
+        
+        <div className="mt-12 flex flex-col items-center gap-4">
+           {/* Botão de Emergência visível mais rápido para evitar frustração de carregamento infinito */}
+           <motion.button
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 1.5 }}
+             onClick={() => {
+               const defaultStats = { kills: 1337, headshotRate: 100, activePlayers: 42 };
+               const defaultConfig = { 
+                 VERSION: "JVIP_4.0_GOLD", 
+                 FOV: { MAX_FOV: 140 }, 
+                 NECK_DOMINANCE: { MAGNETIC_PULL: 1.85, AIM_TARGET: "HEAD" }, 
+                 FEATURES: { NO_RECOIL: true, MAGIC_BULLET: true } 
+               };
+               setStats(defaultStats);
+               setConfig(defaultConfig);
+             }}
+             className="text-[10px] text-neutral-500 border border-neutral-800/50 px-6 py-2.5 rounded-full hover:text-amber-500 hover:border-amber-500 hover:bg-amber-500/5 transition-all uppercase tracking-widest font-black"
+           >
+             Entrar offline (Bypass Local Sync)
+           </motion.button>
+           <p className="text-[8px] text-neutral-700 tracking-widest uppercase">Junior VIP Technical Support</p>
         </div>
       </div>
     );
@@ -453,12 +477,12 @@ export default function App() {
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <h1 className="text-4xl lg:text-5xl font-display font-black tracking-tighter uppercase italic">
-                PAINEL VIP <span className="text-amber-500">FAMOSOS</span>
+                PAINEL <span className="text-amber-500">JVIP</span>
               </h1>
               <div className="hidden sm:flex px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                 <span className="text-[9px] font-mono text-amber-500 font-black tracking-widest uppercase italic">
-                  BYPASS INVISÍVEL ATIVO
+                  GRAVIDADE JVIP V4 ATIVA
                 </span>
               </div>
             </div>

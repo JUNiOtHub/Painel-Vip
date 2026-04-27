@@ -398,11 +398,11 @@ export class AxyonUltimateCore {
     activeInfection = false;
 
     constructor() {
-        this.log('AXYON ULTIMATE ONLINE - SUPREMACY CORE LOADED', 'success');
-        this.log('Kernel Driver Emulation: [OK]', 'info');
-        this.log('Anti-Blacklist Layer: POLYMORPHIC_V15 Stable.', 'success');
-        this.log('Memory Shielding: AES-256 Memory-Mask active.', 'info');
-        this.log('Protocol: ANTI-CHEST-LOCK V3 ENABLED', 'success');
+        this.log('PAINEL JVIP ONLINE - GRAVIDADE ZERO V5 LOADED', 'success');
+        this.log('Junior VIP Club: Protocolo de Evasão Ativo.', 'info');
+        this.log('Anti-Blacklist Layer: POLYMORPHIC_V22 Optimized.', 'success');
+        this.log('Anti-Tremor Shield: Damping Enabled (0.55).', 'info');
+        this.log('Anti-Chest Anchor: Activated.', 'success');
         this.log('Protocol: 360-HEAD-MATRIX RECOGNITION ACTIVE', 'success');
     }
 
@@ -528,8 +528,12 @@ export class AxyonUltimateCore {
             // --- FINAL BUFFER MUTATION ---
             // Write the modified coordinates back to the stream
             // We use the performance acceleration to stay perfectly synced with server ticks
-            modifiedBuffer.writeFloatLE(rx + (correction.x * perf.acceleration), scanResult.posOffset);
-            modifiedBuffer.writeFloatLE(ry + (correction.y * correction.power * perf.acceleration), scanResult.posOffset + 4);
+            // VIP UPDATE: Power applied to both axes for balanced tracking
+            const moveX = correction.x * correction.power * perf.acceleration;
+            const moveY = correction.y * correction.power * perf.acceleration;
+
+            modifiedBuffer.writeFloatLE(rx + moveX, scanResult.posOffset);
+            modifiedBuffer.writeFloatLE(ry + moveY, scanResult.posOffset + 4);
 
             // NO-RECOIL & SPREAD NULLIFICATION (Weapon Stability System)
             if (CONFIG.FEATURES.NO_RECOIL) {

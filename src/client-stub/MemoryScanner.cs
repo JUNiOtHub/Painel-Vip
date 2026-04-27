@@ -62,14 +62,14 @@ namespace ElitePanel.Core
                     // 4. Se encontrou na tela, chama a injeção do mouse
                     if (headScreenPos != Vector2.Zero)
                     {
-                        // GRAVIDADE ATIVADA: Puxa instantaneamente em 1ms sem tocar no botão atirar
-                        float preFireFov = 200.0f; // Área de alcance magnético extremo
+                        // GRAVIDADE ATIVADA: Puxa instantaneamente mas com damping JVIP
+                        float preFireFov = 180.0f; // Reduzido levemente para maior foco
                         
                         MouseInjector.AutoSnapAim(headScreenPos.X, headScreenPos.Y, screenW, screenH, preFireFov);
                     }
 
-                    // Loop de alta performance: 1ms step tracking contínuo para manter a mira grudada
-                    Thread.Sleep(1); 
+                    // Loop de alta performance: 2ms estabilizado para evitar picos e tremor (500Hz)
+                    Thread.Sleep(2); 
                 }
             });
             
