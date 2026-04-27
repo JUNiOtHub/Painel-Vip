@@ -21,31 +21,38 @@
     @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-rose-500/20 hover:bg-rose-500/40 rounded-full transition-colors;
+    @apply bg-amber-500/20 hover:bg-amber-500/40 rounded-full transition-colors;
   }
 }
 
 @layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
   .glass {
     @apply bg-white/[0.03] backdrop-blur-2xl border border-white/[0.05];
   }
   .glass-dark {
     @apply bg-black/40 backdrop-blur-2xl border border-white/[0.05];
   }
-  .glass-rose {
-    @apply bg-rose-500/[0.02] backdrop-blur-2xl border border-rose-500/20;
+  .glass-amber {
+    @apply bg-amber-500/[0.02] backdrop-blur-2xl border border-amber-500/20;
   }
-  .glow-rose {
-    @apply shadow-[0_0_50px_-12px_rgba(225,29,72,0.3)];
+  .glow-amber {
+    @apply shadow-[0_0_50px_-12px_rgba(245,158,11,0.3)];
   }
   .text-glow {
-    @apply drop-shadow-[0_0_8px_rgba(225,29,72,0.8)];
+    @apply drop-shadow-[0_0_8px_rgba(245,158,11,0.8)];
   }
   .scanline {
     background: linear-gradient(
       to bottom,
       transparent 50%,
-      rgba(225, 29, 72, 0.05) 50%
+      rgba(245, 158, 11, 0.05) 50%
     );
     background-size: 100% 4px;
     pointer-events: none;

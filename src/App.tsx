@@ -362,91 +362,69 @@ export default function App() {
         </button>
       </div>
 
-      {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 w-full h-16 glass-dark border-b border-white/5 z-[110] px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Crosshair className="w-6 h-6 text-amber-500" />
-          <span className="font-display font-black tracking-tighter text-lg italic uppercase">
-            PAINEL <span className="text-amber-400">VIP</span>
-          </span>
+      {/* Bottom Navigation - Mobile Only */}
+      <div className="lg:hidden fixed bottom-0 left-0 w-full bg-black/80 backdrop-blur-xl border-t border-white/5 z-[120] pb-safe">
+        <div className="flex items-center justify-around h-16 px-2">
+          <BottomNavItem
+            icon={<Activity />}
+            label="Home"
+            active={activeTab === "dashboard"}
+            onClick={() => setActiveTab("dashboard")}
+          />
+          <BottomNavItem
+            icon={<Target />}
+            label="Arsenal"
+            active={activeTab === "arsenal"}
+            onClick={() => setActiveTab("arsenal")}
+          />
+          <BottomNavItem
+            icon={<Settings />}
+            label="Ajustes"
+            active={activeTab === "settings"}
+            onClick={() => setActiveTab("settings")}
+          />
+          <BottomNavItem
+            icon={<Power />}
+            label="Sair"
+            active={false}
+            onClick={handleLogout}
+          />
         </div>
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 text-amber-500"
-        >
-          {isMenuOpen ? (
-            <X className="w-7 h-7" />
-          ) : (
-            <Menu className="w-7 h-7" />
-          )}
-        </button>
       </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            className="fixed inset-0 bg-black z-[105] pt-24 px-8 flex flex-col gap-4"
-          >
-            <MobileTabLink
-              icon={<Activity />}
-              label="Dashboard"
-              active={activeTab === "dashboard"}
-              onClick={() => {
-                setActiveTab("dashboard");
-                setIsMenuOpen(false);
-              }}
-            />
-            <MobileTabLink
-              icon={<Target />}
-              label="Arsenal"
-              active={activeTab === "arsenal"}
-              onClick={() => {
-                setActiveTab("arsenal");
-                setIsMenuOpen(false);
-              }}
-            />
-            <MobileTabLink
-              icon={<Settings />}
-              label="Settings"
-              active={activeTab === "settings"}
-              onClick={() => {
-                setActiveTab("settings");
-                setIsMenuOpen(false);
-              }}
-            />
-            <div className="mt-auto mb-10">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-4 bg-amber-600/10 border border-amber-500/30 p-5 rounded-3xl text-amber-500 font-black tracking-widest"
-              >
-                <Power className="w-6 h-6" /> LOGOUT
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Header - Compact */}
+      <div className="lg:hidden fixed top-0 w-full h-14 bg-black/50 backdrop-blur-md border-b border-white/5 z-[110] px-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
+            <Crosshair className="w-5 h-5 text-black" />
+          </div>
+          <span className="font-display font-black tracking-tighter text-base italic uppercase">
+            PAINEL <span className="text-amber-500">JVIP</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Online</span>
+        </div>
+      </div>
 
       {/* Main Content Area */}
-      <main className="lg:ml-[80px] p-6 lg:p-12 max-w-7xl mx-auto pt-24 lg:pt-12 relative z-10 min-h-screen">
-        {/* Simplified Header */}
-        <div className="mb-10 flex flex-row items-end justify-between">
-          <div className="space-y-1">
-            <h1 className="text-4xl font-display font-black tracking-tighter uppercase italic">
+      <main className="lg:ml-[80px] p-4 xs:p-5 lg:p-12 max-w-7xl mx-auto pt-20 lg:pt-12 pb-24 lg:pb-12 relative z-10 min-h-screen">
+        {/* Compact Header for Dashboard */}
+        <div className="mb-6 lg:mb-10 flex flex-col xs:flex-row items-start xs:items-end justify-between gap-4">
+          <div className="space-y-0.5">
+            <h1 className="text-3xl lg:text-4xl font-display font-black tracking-tighter uppercase italic leading-none">
               PAINEL <span className="text-amber-500">JVIP</span>
             </h1>
-            <p className="text-neutral-500 font-mono text-[10px] tracking-[0.2em] uppercase font-bold opacity-60">
-              VERSION {config.VERSION} // STABLE Bypassing
+            <p className="text-neutral-500 font-mono text-[9px] tracking-[0.2em] uppercase font-bold opacity-60">
+              V4 GOLD // KERNEL SYNCED
             </p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 w-full xs:w-auto overflow-x-auto pb-1 xs:pb-0 hide-scrollbar">
             <HeaderStat label="Status" value="ATIVO" active />
-            <HeaderStat label="Server" value="12ms" color="text-amber-500" />
-            <HeaderStat label="Assinatura" value="VIP" />
+            <HeaderStat label="Ping" value="12ms" color="text-amber-500" />
+            <HeaderStat label="User" value={username || "VIP"} />
           </div>
         </div>
 
@@ -460,22 +438,22 @@ export default function App() {
               className="grid grid-cols-1 lg:grid-cols-12 gap-6"
             >
               <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <BentoCard className="sm:col-span-2 p-8">
-                  <div className="flex flex-col h-full justify-between gap-10">
-                    <div className="space-y-4">
+                <BentoCard className="sm:col-span-2 p-5 xs:p-8">
+                  <div className="flex flex-col h-full justify-between gap-6 xs:gap-10">
+                    <div className="space-y-3 xs:space-y-4">
                       <div className="flex items-center gap-3">
-                        <Activity className="text-amber-500 w-5 h-5" />
-                        <h3 className="text-xl font-display font-black tracking-tight uppercase italic">
+                        <Activity className="text-amber-500 w-4 h-4 xs:w-5 xs:h-5" />
+                        <h3 className="text-lg xs:text-xl font-display font-black tracking-tight uppercase italic">
                           Monitor de Performance
                         </h3>
                       </div>
-                      <p className="text-neutral-500 text-sm max-w-xl">
+                      <p className="text-neutral-500 text-xs xs:text-sm max-w-xl">
                         Informações em tempo real da injeção de memória e status do bypass. 
                         Configurações otimizadas para alto desempenho.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 xs:gap-6">
                       <StatBlock label="Abatimentos" value={stats.kills} />
                       <StatBlock label="HS %" value={`${stats.headshotRate}%`} />
                       <StatBlock label="Ativos" value={stats.activePlayers} />
@@ -736,16 +714,16 @@ function SidebarLink({ icon, active, onClick }: any) {
   );
 }
 
-function MobileTabLink({ icon, label, active, onClick }: any) {
+function BottomNavItem({ icon, label, active, onClick }: any) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-5 p-5 rounded-2xl border transition-all duration-300 ${active ? "bg-amber-500 border-amber-400 text-black shadow-lg" : "bg-neutral-900 border-white/5 text-neutral-500"}`}
+      className={`flex flex-col items-center justify-center gap-1 transition-all duration-300 ${active ? "text-amber-500" : "text-neutral-500"}`}
     >
-      <div className={`p-2 rounded-lg ${active ? "bg-black/10" : "bg-neutral-800"}`}>
-        {React.cloneElement(icon, { className: "w-5 h-5" })}
+      <div className={`p-2 rounded-xl transition-all ${active ? "bg-amber-500/10" : ""}`}>
+        {React.cloneElement(icon, { className: `w-5 h-5 ${active ? "fill-amber-500/20" : ""}` })}
       </div>
-      <span className="text-sm font-bold uppercase tracking-widest text-white">
+      <span className={`text-[10px] font-black uppercase tracking-tight ${active ? "opacity-100" : "opacity-0 scale-75"} transition-all`}>
         {label}
       </span>
     </button>
@@ -767,7 +745,7 @@ function SectionLabel({ label }: { label: string }) {
 function BentoCard({ children, className }: any) {
   return (
     <div
-      className={`bg-neutral-900/40 rounded-3xl border border-white/5 relative backdrop-blur-md transition-all duration-500 hover:border-white/10 ${className}`}
+      className={`bg-neutral-900/40 rounded-2xl xs:rounded-3xl border border-white/5 relative backdrop-blur-md transition-all duration-500 hover:border-white/10 ${className}`}
     >
       {children}
     </div>
@@ -776,11 +754,11 @@ function BentoCard({ children, className }: any) {
 
 function HeaderStat({ label, value, active, color = "text-white" }: any) {
   return (
-    <div className={`px-4 py-2 rounded-xl flex flex-col text-center min-w-[90px] ${active ? "bg-white/5 border border-white/10" : "bg-black/20 border border-transparent"}`}>
-      <span className="text-[8px] font-black uppercase tracking-widest text-neutral-500 mb-0.5 leading-none">
+    <div className={`px-3 xs:px-4 py-1.5 xs:py-2 rounded-lg xs:rounded-xl flex flex-col text-center min-w-[70px] xs:min-w-[90px] ${active ? "bg-amber-500/10 border border-amber-500/20" : "bg-black/20 border border-white/5"}`}>
+      <span className="text-[7px] xs:text-[8px] font-black uppercase tracking-widest text-neutral-500 mb-0.5 leading-none">
         {label}
       </span>
-      <span className={`text-[10px] font-black uppercase italic ${color}`}>
+      <span className={`text-[9px] xs:text-[10px] font-black uppercase italic ${color}`}>
         {value}
       </span>
     </div>
@@ -789,11 +767,11 @@ function HeaderStat({ label, value, active, color = "text-white" }: any) {
 
 function StatBlock({ label, value, color }: any) {
   return (
-    <div className="space-y-1">
-      <span className="text-[8px] font-black uppercase tracking-widest text-neutral-600 leading-none">
+    <div className="space-y-0.5">
+      <span className="text-[7px] xs:text-[8px] font-black uppercase tracking-widest text-neutral-600 leading-none">
         {label}
       </span>
-      <p className={`text-sm lg:text-base font-black uppercase italic tracking-tight leading-none ${color || "text-white"}`}>
+      <p className={`text-xs xs:text-sm lg:text-base font-black uppercase italic tracking-tight leading-none ${color || "text-white"}`}>
         {value}
       </p>
     </div>
@@ -832,22 +810,22 @@ function StatusRow({ label, status }: any) {
 
 function WeaponCard({ name, type, rarity, stats, sync, glow }: any) {
   return (
-    <BentoCard className={`p-8 group border transition-all duration-300 ${glow}`}>
-      <div className="flex flex-col h-full justify-between gap-10">
-        <div className="space-y-4">
+    <BentoCard className={`p-5 xs:p-7 group border transition-all duration-300 ${glow}`}>
+      <div className="flex flex-col h-full justify-between gap-6 xs:gap-8">
+        <div className="space-y-3 xs:space-y-4">
           <div className="flex justify-between items-start">
-            <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest italic border ${rarity === "LEGENDARY" ? "bg-amber-500/10 border-amber-500/30 text-amber-500" : rarity === "MYTHIC" ? "bg-amber-500/10 border-amber-500/30 text-amber-600" : "bg-purple-500/10 border-purple-500/30 text-purple-500"}`}>
+            <div className={`px-2 py-0.5 rounded text-[7px] xs:text-[8px] font-black uppercase tracking-widest italic border ${rarity === "LEGENDARY" ? "bg-amber-500/10 border-amber-500/30 text-amber-500" : rarity === "MYTHIC" ? "bg-amber-500/10 border-amber-500/30 text-amber-600" : "bg-purple-500/10 border-purple-500/30 text-purple-500"}`}>
               {rarity}
             </div>
-            <span className="text-[9px] font-mono text-neutral-600 font-bold uppercase tracking-widest">
-              Synced: {sync}%
+            <span className="text-[8px] xs:text-[9px] font-mono text-neutral-600 font-bold uppercase tracking-widest">
+              Sync: {sync}%
             </span>
           </div>
           <div>
-            <h3 className="text-xl font-display font-black tracking-tight leading-none mb-1 uppercase italic group-hover:text-amber-500 transition-colors">
+            <h3 className="text-lg xs:text-xl font-display font-black tracking-tight leading-none mb-1 uppercase italic group-hover:text-amber-500 transition-colors">
               {name}
             </h3>
-            <p className="text-[9px] font-bold text-neutral-500 uppercase tracking-widest">
+            <p className="text-[8px] xs:text-[9px] font-bold text-neutral-500 uppercase tracking-widest">
               {type} Armament
             </p>
           </div>
@@ -859,7 +837,7 @@ function WeaponCard({ name, type, rarity, stats, sync, glow }: any) {
           <WeaponStat value={stats.rng} label="RNG" />
         </div>
 
-        <button className="w-full py-3 border border-white/5 rounded-xl bg-white/[0.02] hover:bg-white/5 transition-all text-[9px] font-black uppercase tracking-widest">
+        <button className="w-full py-2.5 xs:py-3 border border-white/5 rounded-xl bg-white/[0.02] hover:bg-white/5 transition-all text-[8px] xs:text-[9px] font-black uppercase tracking-widest">
           Select armament
         </button>
       </div>
