@@ -59,10 +59,16 @@ async function startServer() {
         const { currentConfig } = req.body;
         if (currentConfig) {
             Object.keys(currentConfig).forEach(group => {
-                if (CONFIG[group]) {
-                    Object.keys(currentConfig[group]).forEach(key => {
-                        CONFIG[group][key] = currentConfig[group][key];
-                    });
+                if (CONFIG[group] !== undefined && currentConfig[group] !== undefined) {
+                    if (typeof CONFIG[group] === 'object' && !Array.isArray(CONFIG[group])) {
+                        if (typeof currentConfig[group] === 'object' && currentConfig[group] !== null) {
+                            Object.keys(currentConfig[group]).forEach(key => {
+                                CONFIG[group][key] = currentConfig[group][key];
+                            });
+                        }
+                    } else {
+                        CONFIG[group] = currentConfig[group];
+                    }
                 }
             });
         }
@@ -120,13 +126,21 @@ async function startServer() {
 
     app.post('/api/config/bulk', (req, res) => {
         const newConfig = req.body;
-        Object.keys(newConfig).forEach(group => {
-            if (CONFIG[group]) {
-                Object.keys(newConfig[group]).forEach(key => {
-                    CONFIG[group][key] = newConfig[group][key];
-                });
-            }
-        });
+        if (newConfig && typeof newConfig === 'object') {
+            Object.keys(newConfig).forEach(group => {
+                if (CONFIG[group] !== undefined && newConfig[group] !== undefined) {
+                    if (typeof CONFIG[group] === 'object' && !Array.isArray(CONFIG[group])) {
+                        if (typeof newConfig[group] === 'object' && newConfig[group] !== null) {
+                            Object.keys(newConfig[group]).forEach(key => {
+                                CONFIG[group][key] = newConfig[group][key];
+                            });
+                        }
+                    } else {
+                        CONFIG[group] = newConfig[group];
+                    }
+                }
+            });
+        }
         core.log('[SYS] Configuração TITAN sincronizada via Neural link.', 'success');
         res.json({ success: true });
     });

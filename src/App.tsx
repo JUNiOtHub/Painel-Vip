@@ -149,9 +149,9 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-black text-rose-500 font-display flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="min-h-screen bg-black text-amber-500 font-display flex items-center justify-center p-4 relative overflow-hidden">
         <div className="absolute inset-0 scanline opacity-20" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-rose-950/20 via-black to-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-950/20 via-black to-black" />
         
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
@@ -159,48 +159,48 @@ export default function App() {
           className="w-full max-w-md relative z-10"
         >
           <div className="bg-neutral-900/40 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] p-10 overflow-hidden relative shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
             
             <div className="text-center mb-10">
               <motion.div 
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ repeat: Infinity, duration: 4 }}
-                className="w-20 h-20 bg-rose-500/10 rounded-3xl border border-rose-500/20 mx-auto mb-6 flex items-center justify-center glass shadow-[0_0_40px_rgba(225,29,72,0.2)]"
+                className="w-20 h-20 bg-amber-500/10 rounded-3xl border border-amber-500/20 mx-auto mb-6 flex items-center justify-center glass shadow-[0_0_40px_rgba(245,158,11,0.2)]"
               >
-                <Fingerprint className="w-10 h-10 text-rose-500" />
+                <Fingerprint className="w-10 h-10 text-amber-500" />
               </motion.div>
               <h1 className="text-4xl font-black tracking-tighter text-white uppercase italic">
-                XITZADA <span className="text-rose-500">TITAN</span>
+                PAINEL <span className="text-amber-500">VIP</span>
               </h1>
-              <p className="text-[9px] font-mono tracking-[0.6em] text-neutral-500 mt-2 uppercase">Core Engine Authorization Required</p>
+              <p className="text-[9px] font-mono tracking-[0.6em] text-amber-500 mt-2 uppercase">DOS FAMOSOS - EXCLUSIVE CLUB</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-black tracking-[0.2em] text-neutral-500 uppercase ml-2">Operator ID</label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 group-focus-within:text-rose-500 transition-colors" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 group-focus-within:text-amber-500 transition-colors" />
                   <input
                     type="text"
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-black/40 border border-white/5 rounded-[1.25rem] py-4 pl-12 pr-4 text-white focus:outline-none focus:border-rose-500/50 transition-all font-mono text-sm"
-                    placeholder="ENTER ID..."
+                    className="w-full bg-black/40 border border-white/5 rounded-[1.25rem] py-4 pl-12 pr-4 text-white focus:outline-none focus:border-amber-500/50 transition-all font-mono text-sm"
+                    placeholder="ENTER VIP KEY..."
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black tracking-[0.2em] text-neutral-500 uppercase ml-2">Access Token</label>
+                <label className="text-[10px] font-black tracking-[0.2em] text-neutral-500 uppercase ml-2">Secret Code</label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 group-focus-within:text-rose-500 transition-colors" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 group-focus-within:text-amber-500 transition-colors" />
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-black/40 border border-white/5 rounded-[1.25rem] py-4 pl-12 pr-4 text-white focus:outline-none focus:border-rose-500/50 transition-all font-mono text-sm"
+                    className="w-full bg-black/40 border border-white/5 rounded-[1.25rem] py-4 pl-12 pr-4 text-white focus:outline-none focus:border-amber-500/50 transition-all font-mono text-sm"
                     placeholder="••••••••"
                   />
                 </div>
@@ -210,15 +210,15 @@ export default function App() {
                 <motion.div 
                   initial={{ opacity: 0, x: -10 }} 
                   animate={{ opacity: 1, x: 0 }}
-                  className="bg-rose-500/10 border border-rose-500/20 p-3 rounded-xl text-[10px] text-rose-500 font-bold uppercase tracking-widest text-center"
+                  className="bg-red-500/10 border border-red-500/20 p-3 rounded-xl text-[10px] text-red-500 font-bold uppercase tracking-widest text-center"
                 >
                   {loginError}
                 </motion.div>
               )}
 
-              <button type="submit" className="w-full group bg-rose-600 hover:bg-rose-500 text-white font-black py-5 rounded-2xl transition-all shadow-[0_20px_40px_-10px_rgba(225,29,72,0.4)] mt-6 relative overflow-hidden active:scale-95">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                <span className="relative z-10 tracking-[0.3em]">INITIALIZE SESSION</span>
+              <button type="submit" className="w-full group bg-amber-600 hover:bg-amber-500 text-white font-black py-5 rounded-2xl transition-all shadow-[0_20px_40px_-10px_rgba(245,158,11,0.4)] mt-6 relative overflow-hidden active:scale-95">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <span className="relative z-10 tracking-[0.3em] font-display">ENTRAR NO VIP</span>
               </button>
             </form>
           </div>
@@ -234,39 +234,39 @@ export default function App() {
   }
 
   if (!stats || !config) return (
-    <div className="min-h-screen bg-black text-rose-500 flex flex-col items-center justify-center font-mono relative overflow-hidden">
+    <div className="min-h-screen bg-black text-amber-500 flex flex-col items-center justify-center font-mono relative overflow-hidden">
       <div className="absolute inset-0 scanline opacity-20" />
       <motion.div 
         animate={{ scale: [1, 1.1, 1] }} 
         transition={{ repeat: Infinity, duration: 2 }}
         className="text-2xl font-black tracking-tighter"
       >
-        XITZADA_LOADING_CORE...
+        VIP_AUTHENTICATING...
       </motion.div>
       <div className="w-64 h-1 bg-neutral-900 rounded-full mt-6 relative overflow-hidden">
         <motion.div 
            initial={{ x: '-100%' }}
            animate={{ x: '100%' }}
            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-           className="absolute inset-0 w-32 bg-rose-600"
+           className="absolute inset-0 w-32 bg-amber-500"
         />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#030303] text-neutral-100 font-sans selection:bg-rose-500/30 selection:text-white">
+    <div className="min-h-screen bg-[#030303] text-neutral-100 font-sans selection:bg-amber-500/30 selection:text-white">
       {/* Visual background layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(225,29,72,0.1)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_100%,rgba(225,29,72,0.05)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(245,158,11,0.08)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_100%,rgba(245,158,11,0.05)_0%,transparent_50%)]" />
         <div className="absolute inset-0 scanline opacity-10" />
       </div>
 
       {/* Sidebar - Desktop Only */}
       <div className="fixed left-0 top-0 h-full w-[80px] glass-dark border-r border-white/5 z-[100] hidden lg:flex flex-col items-center py-10 gap-10">
-        <div className="w-12 h-12 bg-rose-600 rounded-2xl flex items-center justify-center glow-rose animate-pulse">
-          <Crosshair className="w-6 h-6 text-white" />
+        <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center glow-amber animate-pulse">
+          <Crosshair className="w-6 h-6 text-black" />
         </div>
         
         <div className="flex flex-col gap-6 flex-1">
@@ -279,7 +279,7 @@ export default function App() {
 
         <button 
           onClick={handleLogout}
-          className="p-4 text-neutral-600 hover:text-rose-500 transition-colors duration-300"
+          className="p-4 text-neutral-600 hover:text-amber-500 transition-colors duration-300"
         >
           <Power className="w-6 h-6" />
         </button>
@@ -288,10 +288,10 @@ export default function App() {
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 w-full h-16 glass-dark border-b border-white/5 z-[110] px-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Crosshair className="w-6 h-6 text-rose-500" />
-          <span className="font-display font-black tracking-tighter text-lg italic uppercase">XITZADA <span className="text-rose-400">TITAN</span></span>
+          <Crosshair className="w-6 h-6 text-amber-500" />
+          <span className="font-display font-black tracking-tighter text-lg italic uppercase">PAINEL <span className="text-amber-400">VIP</span></span>
         </div>
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-rose-500">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-amber-500">
            {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
         </button>
       </div>
@@ -313,9 +313,9 @@ export default function App() {
             <div className="mt-auto mb-10">
               <button 
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-4 bg-rose-600/10 border border-rose-500/30 p-5 rounded-3xl text-rose-500 font-black tracking-widest"
+                className="w-full flex items-center justify-center gap-4 bg-amber-600/10 border border-amber-500/30 p-5 rounded-3xl text-amber-500 font-black tracking-widest"
               >
-                <Power className="w-6 h-6" /> END_SESSION
+                <Power className="w-6 h-6" /> LOGOUT
               </button>
             </div>
           </motion.div>
@@ -330,48 +330,44 @@ export default function App() {
            <div className="space-y-1">
               <div className="flex items-center gap-3">
                  <h1 className="text-4xl lg:text-5xl font-display font-black tracking-tighter uppercase italic">
-                    SUPREMACY <span className="text-rose-500">ENGINE</span>
+                    PAINEL VIP <span className="text-amber-500">FAMOSOS</span>
                  </h1>
-                 <div className="hidden sm:flex px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9px] font-mono text-emerald-500 font-black tracking-widest uppercase italic">Polymorphic Bypass Active</span>
+                 <div className="hidden sm:flex px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    <span className="text-[9px] font-mono text-amber-500 font-black tracking-widest uppercase italic">BYPASS INVISÍVEL ATIVO</span>
                  </div>
               </div>
               <p className="text-neutral-500 font-mono text-[10px] tracking-[0.4em] uppercase font-bold opacity-60">Version {config.VERSION} // Build_ID: {Math.random().toString(16).slice(2, 6).toUpperCase()}</p>
            </div>
 
            <div className="flex gap-2 bg-neutral-900/40 p-1.5 rounded-[1.5rem] border border-white/5">
-              <HeaderStat label="Server Latency" value="12ms" active />
-              <HeaderStat label="Neural Thread" value="Ultra" color="text-rose-500" />
-              <HeaderStat label="Account Tier" value="TITAN" color="text-amber-500" />
+              <HeaderStat label="Assinatura" value="VITALÍCIA" active />
+              <HeaderStat label="Server VIP" value="0ms" color="text-amber-500" />
+              <HeaderStat label="Tier" value="INFLUENCER" color="text-white" />
            </div>
         </div>
 
         {/* Setup Flow - Dedicated section */}
         <div className="mb-12">
-           <SectionLabel label="Protocolo de Instalação" />
-           <div className="bg-gradient-to-br from-neutral-900/60 to-black border border-white/5 rounded-[2.5rem] p-8 lg:p-10 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+           <SectionLabel label="Instalação Premium" />
+           <div className="bg-gradient-to-br from-neutral-900/60 to-black border border-amber-500/10 rounded-[2.5rem] p-8 lg:p-10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
               
               <div className="flex flex-col lg:flex-row gap-12 relative z-10">
                  <div className="lg:w-1/3 space-y-6">
                     <div className="flex items-center gap-4">
-                       <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center border-rose-500/30 shadow-[0_0_20px_rgba(225,29,72,0.1)]">
-                          <Download className="text-rose-500 w-7 h-7" />
+                       <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                          <Target className="text-amber-500 w-7 h-7" />
                        </div>
-                       <h2 className="text-3xl font-display font-black tracking-tight leading-none uppercase italic">ORDEM DE <br/><span className="text-rose-500">SINCRONIA</span></h2>
+                       <h2 className="text-3xl font-display font-black tracking-tight leading-none uppercase italic">LIGAÇÃO <br/><span className="text-amber-500">DIRETA</span></h2>
                     </div>
                     <p className="text-neutral-400 text-sm leading-relaxed">
-                       Este procedimento é obrigatório para camuflar a atividade do motor gráfico no nível do kernel do sistema operacional.
+                       Siga a ordem restrita para injetar o painel no emulador de forma indetectável pelas logs locais.
                     </p>
                     <div className="flex flex-col gap-2">
-                       <div className="flex items-center gap-3 text-[10px] font-mono text-amber-500 uppercase font-black tracking-widest bg-amber-500/5 p-4 rounded-xl border border-amber-500/10">
-                          <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                          <span>Atenção: Use Safari/Chrome em modo padrão (não anônimo).</span>
-                       </div>
-                       <div className="flex items-center gap-3 text-[10px] font-mono text-rose-400 uppercase font-black tracking-widest bg-rose-500/5 p-4 rounded-xl border border-rose-500/10">
-                          <CheckCircle2 className="w-4 h-4 text-rose-400 flex-shrink-0" />
-                          <span>Sincronização 100% segura contra detecção manual.</span>
+                       <div className="flex items-center gap-3 text-[10px] font-mono text-neutral-400 uppercase font-black tracking-widest bg-white/5 p-4 rounded-xl border border-white/10">
+                          <Eye className="w-4 h-4 text-neutral-400 flex-shrink-0" />
+                          <span>Streaming mode seguro (Não aparece no OBS/Tiktok).</span>
                        </div>
                     </div>
                  </div>
@@ -441,15 +437,15 @@ export default function App() {
                                 <div className="w-10 h-10 glass rounded-xl flex items-center justify-center border-rose-500/30">
                                    <Zap className="text-rose-500 w-5 h-5" />
                                 </div>
-                                <h3 className="text-xl font-display font-black tracking-tight uppercase italic">Live Performance</h3>
+                                <h3 className="text-xl font-display font-black tracking-tight uppercase italic text-amber-500">Motor VIP Famosos</h3>
                              </div>
-                             <p className="text-neutral-500 text-sm max-w-sm leading-relaxed">Optimization algorithms are active within the kernel space, ensuring 0ms packet delay and normalized jitter buffers.</p>
+                             <p className="text-neutral-500 text-sm max-w-sm leading-relaxed">O mesmo Painel utilizado por influenciadores. Inject direto na memória RAM com zero chance de BAN. Smooth totalmente natural (Discreto).</p>
                           </div>
                           
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                             <StatBlock label="Response" value="Instant" color="text-rose-500" />
-                             <StatBlock label="Polling Rate" value="1000hz" color="text-white" />
-                             <StatBlock label="Injection" value="SUCCESSFUL" color="text-emerald-500" />
+                             <StatBlock label="Desempenho" value="Liso (120 FPS)" color="text-amber-500" />
+                             <StatBlock label="Risco de Ban" value="0.0%" color="text-white" />
+                             <StatBlock label="Bypass" value="INVISÍVEL" color="text-emerald-500" />
                           </div>
                        </div>
                     </BentoCard>
@@ -458,23 +454,23 @@ export default function App() {
                     <BentoCard className="p-8">
                        <div className="flex flex-col h-full justify-between gap-8">
                           <div>
-                             <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-600 mb-4">Ballistics Target</h4>
-                             <h3 className="text-2xl font-display font-black tracking-tight italic uppercase mb-2">Aim Focus</h3>
-                             <p className="text-neutral-500 text-xs">Selection affects projectile tracking priority.</p>
+                             <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-600 mb-4">Balística Famosos</h4>
+                             <h3 className="text-2xl font-display font-black tracking-tight italic uppercase mb-2">Foco da Mira</h3>
+                             <p className="text-neutral-500 text-xs">Onde a mira vai grudar automaticamente.</p>
                           </div>
                           <div className="flex flex-col gap-2">
                              <AimOption 
-                                label="HEAD (TITAN)" 
+                                label="CABEÇA (SÓ VERMELHO)" 
                                 active={config.NECK_DOMINANCE?.AIM_TARGET === 'HEAD'} 
                                 onClick={() => setConfigValue('NECK_DOMINANCE', 'AIM_TARGET', 'HEAD')} 
                              />
                              <AimOption 
-                                label="NECK (SMOOTH)" 
+                                label="PESCOÇO (DISFARÇADO)" 
                                 active={config.NECK_DOMINANCE?.AIM_TARGET === 'NECK'} 
                                 onClick={() => setConfigValue('NECK_DOMINANCE', 'AIM_TARGET', 'NECK')} 
                              />
                              <AimOption 
-                                label="CHEST (LEGIT)" 
+                                label="PEITO (CAMPEONATO)" 
                                 active={config.NECK_DOMINANCE?.AIM_TARGET === 'CHEST'} 
                                 onClick={() => setConfigValue('NECK_DOMINANCE', 'AIM_TARGET', 'CHEST')} 
                              />
@@ -483,20 +479,20 @@ export default function App() {
                     </BentoCard>
 
                     {/* Features Toggle Preview */}
-                    <BentoCard className="p-8 bg-rose-600 shadow-[0_30px_60px_-15px_rgba(225,29,72,0.4)] border-rose-400/30">
+                    <BentoCard className="p-8 bg-amber-500 shadow-[0_30px_60px_-15px_rgba(245,158,11,0.3)] border-amber-400/30">
                        <div className="flex flex-col h-full justify-between items-start">
-                          <div className="w-14 h-14 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center mb-6">
-                             <Sparkles className="w-7 h-7 text-white" />
+                          <div className="w-14 h-14 bg-black/20 backdrop-blur-xl rounded-2xl flex items-center justify-center mb-6">
+                             <Sparkles className="w-7 h-7 text-black" />
                           </div>
                           <div className="space-y-4">
-                             <h3 className="text-2xl font-display font-black text-white italic uppercase tracking-tighter leading-none">Instant Inject <br/>Protocol v5</h3>
-                             <p className="text-white/70 text-xs font-medium leading-relaxed">Launch with active neural synchronization enabled across all combat channels.</p>
+                             <h3 className="text-2xl font-display font-black text-black italic uppercase tracking-tighter leading-none">Injetar Elite <br/>VIP</h3>
+                             <p className="text-black/70 text-xs font-medium leading-relaxed">Ative a magia. O bypass protegerá sua conta automaticamente. Bom jogo.</p>
                              <button 
                                onClick={handleInject}
                                disabled={isInjecting}
-                               className="bg-white text-rose-600 w-full py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95 disabled:opacity-50"
+                               className="bg-black text-amber-500 w-full py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95 disabled:opacity-50"
                              >
-                                {isInjecting ? 'SYNCHRONIZING...' : 'START_MATCH'}
+                                {isInjecting ? 'INJETANDO...' : 'INJETAR AGORA'}
                              </button>
                           </div>
                        </div>
@@ -573,7 +569,7 @@ export default function App() {
                    rarity="MYTHIC" 
                    sync={99.8} 
                    stats={{ dmg: 45, acc: 98, rng: 30 }} 
-                   glow="border-rose-500/30 shadow-[0_0_50px_rgba(225,29,72,0.1)]"
+                   glow="border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.1)]"
                  />
                  <WeaponCard 
                    name="M1887 - APOCALYPSE" 
@@ -618,15 +614,15 @@ export default function App() {
                exit={{ opacity: 0, y: -20 }}
                className="space-y-8"
              >
-                <BentoCard className="p-8 lg:p-12">
+                <BentoCard className="p-8 lg:p-12 border-amber-500/20">
                    <div className="flex flex-col lg:flex-row gap-12">
                       <div className="lg:w-1/3 space-y-6">
-                         <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center border-rose-500/30 glow-rose">
-                            <Cpu className="text-rose-500 w-8 h-8" />
+                         <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center border-amber-500/30 glow-amber">
+                            <Cpu className="text-amber-500 w-8 h-8" />
                          </div>
-                         <h2 className="text-3xl font-display font-black tracking-tight italic uppercase">Neural <br/><span className="text-rose-500">Processing</span></h2>
+                         <h2 className="text-3xl font-display font-black tracking-tight italic uppercase">Config <br/><span className="text-amber-500">VIP</span></h2>
                          <p className="text-neutral-500 text-sm leading-relaxed">
-                            Ajuste os parâmetros do driver de emulação de kernel. Estes valores controlam a agressividade da rede neural de aiming durante o combate.
+                            Ajuste os parâmetros do driver VIP. Estes valores controlam a agressividade da rede neural de aiming durante o combate.
                          </p>
                       </div>
                       
@@ -634,13 +630,13 @@ export default function App() {
                          <div className="space-y-6">
                             <label className="flex items-center justify-between">
                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">Radial FOV Radius</span>
-                               <span className="text-rose-500 font-mono font-bold text-lg leading-none">{config.FOV?.MAX_FOV}px</span>
+                               <span className="text-amber-500 font-mono font-bold text-lg leading-none">{config.FOV?.MAX_FOV}px</span>
                             </label>
                             <input 
                                type="range" min="10" max="800" step="5"
                                value={config.FOV?.MAX_FOV || 360}
                                onChange={(e) => setConfigValue('FOV', 'MAX_FOV', parseInt(e.target.value))}
-                               className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                               className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                             />
                             <p className="text-[9px] text-neutral-600 font-mono italic">Define a área circular de detecção automática para aquisição de novos alvos.</p>
                          </div>
@@ -648,13 +644,13 @@ export default function App() {
                          <div className="space-y-6">
                             <label className="flex items-center justify-between">
                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">Magnetic Intensity</span>
-                               <span className="text-rose-500 font-mono font-bold text-lg leading-none">{(config.NECK_DOMINANCE?.MAGNETIC_PULL * 100).toFixed(0)}%</span>
+                               <span className="text-amber-500 font-mono font-bold text-lg leading-none">{(config.NECK_DOMINANCE?.MAGNETIC_PULL * 100).toFixed(0)}%</span>
                             </label>
                             <input 
                                type="range" min="0.1" max="5.0" step="0.05"
                                value={config.NECK_DOMINANCE?.MAGNETIC_PULL || 1.85}
                                onChange={(e) => setConfigValue('NECK_DOMINANCE', 'MAGNETIC_PULL', parseFloat(e.target.value))}
-                               className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                               className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                             />
                             <p className="text-[9px] text-neutral-600 font-mono italic">Intensidade do pull "trava-mira". Valores acima de 3.0 resultam em imã violento.</p>
                          </div>
@@ -818,13 +814,13 @@ function WeaponCard({ name, type, rarity, stats, sync, glow }: any) {
          <div className="relative z-10 flex flex-col h-full justify-between gap-10">
             <div className="space-y-4">
                <div className="flex justify-between items-start">
-                  <div className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest italic border ${rarity === 'LEGENDARY' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : rarity === 'MYTHIC' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500' : 'bg-purple-500/10 border-purple-500/30 text-purple-500'}`}>
+                  <div className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest italic border ${rarity === 'LEGENDARY' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : rarity === 'MYTHIC' ? 'bg-amber-500/10 border-amber-500/30 text-amber-600' : 'bg-purple-500/10 border-purple-500/30 text-purple-500'}`}>
                      {rarity}
                   </div>
                   <span className="text-[10px] font-mono text-neutral-600 font-bold">Sync: {sync}%</span>
                </div>
                <div>
-                  <h3 className="text-2xl font-display font-black tracking-tight leading-none mb-1 group-hover:text-rose-500 transition-colors uppercase italic">{name}</h3>
+                  <h3 className="text-2xl font-display font-black tracking-tight leading-none mb-1 group-hover:text-amber-500 transition-colors uppercase italic">{name}</h3>
                   <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.3em]">{type} Armament</p>
                </div>
             </div>

@@ -357,14 +357,8 @@ class BallisticCalculator {
         const horizontalLead = 300.585 * distScalar * (300.5 + (safeVelMag * 30.8)) * snap * sensiBoost;
         const finalX = (rawX > 0 ? 1 : -1) * horizontalLead;
         
-        // 10. RELATIVISTIC VERTICAL PULL (FORCED CAPA - 300x ELEVATION)
-        const gravityEffect = (absDist * 3.225) * focusBias;
-        const verticalForceBias = 30000.0; // TITAN ELEVATION
-        
-        const yRaw = (weapon.yOffset + verticalForceBias + gravityEffect) * 300.055 * distScalar * focusBias * chestLockBreakForce;
-        
-        // APELÃO: Utilizando o arquivo de Lock Head supremo com Tracking e One-Tap
-        const ultimateLock = UltimateLockHead.forceCapa(yRaw, absDist, rawY, pVel, cRot, weapon.category, playerState);
+        // APELÃO: Utilizando o arquivo de Lock Head supremo com modo EXECUÇÃO
+        const ultimateLock = UltimateLockHead.forceCapa(absDist, rawY, pVel, cRot, weapon.category, playerState);
 
         return { 
             x: ultimateLock.x, 
