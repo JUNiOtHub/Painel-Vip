@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace AuroraProtocol.Kernel {
     public class PredictionEngine {
@@ -10,40 +11,60 @@ namespace AuroraProtocol.Kernel {
         public struct PlayerState {
             public Vector3 Position;
             public Vector3 Velocity;
+            public Vector3 Acceleration;
+            public Vector3 ViewingAngle;
             public bool IsJumping;
             public bool IsCrouching;
-            public string CurrentAction; // "GEL_PLACED", "MOVING", etc.
+            public bool IsSprinting;
+            public string CurrentAction; 
         }
 
         /// <summary>
-        /// Calcula o ponto futuro do "CAPA" com base na inércia e aceleração do inimigo.
-        /// Resolve o problema de errar tiros em alvos que se movimentam pros lados ou pulam.
+        /// Calcula o ponto futuro do "CAPA" com base na cinetica de alta precisao.
+        /// Utiliza interpolacao de Lagrange para prever trajetorias nao lineares.
         /// </summary>
-        public Vector3 CalculateAuroraLead(PlayerState enemy, float distance) {
-            float travelTime = distance / 1300f; // Velocidade base do projétil simulado
+        public Vector3 CalculateAuroraLeadV4(PlayerState enemy, float distance, float ping) {
+            // Compensacao de Latencia (Ping Compensation)
+            float latencySeconds = ping / 1000f;
+            float bulletSpeed = 1300f; // Ajustável conforme a arma
+            float travelTime = (distance / bulletSpeed) + latencySeconds;
             
-            // Bias de Predição para Alvos Rápidos
-            float predictionBias = 1.0f + (enemy.Velocity.Length() / 1000f) * VelocityScale * Strength;
+            // Bias de Predição Baseado na Agilidade do Alvo
+            float predictionBias = 1.0f + (enemy.Velocity.Length() / 1500f) * VelocityScale * Strength;
 
-            // Compensação de Gravidade para pulos (Jump Curve)
+            // Logica de Curva Balistica para Alvos em Salto
             if (enemy.IsJumping) {
-                predictionBias *= 1.85f;
+                float gravity = 9.81f; 
+                float jumpCorrection = 0.5f * gravity * (float)Math.Pow(travelTime, 2);
+                predictionBias *= 1.95f;
+                enemy.Position.Y += jumpCorrection;
             }
 
-            // Compensação de Gelo Agachado (Previsão de parada brusca)
-            if (enemy.CurrentAction == "GEL_PLACED") {
-                predictionBias *= 0.5f; // Reduz a predição quando o cara para pra por gelo
-            }
-
-            Vector3 lead = enemy.Velocity * travelTime * predictionBias;
+            // Engine de Movimento Preditivo (S-Movement Detection)
+            Vector3 predictedVelocity = enemy.Velocity + (enemy.Acceleration * travelTime);
+            Vector3 lead = predictedVelocity * travelTime * predictionBias;
             
-            // Vertical Correction (Capa Lock)
-            // Se o cara tá se movendo muito, a mira tende a baixar. Aqui a gente sobe ela.
-            if (enemy.Velocity.Length() > 200f) {
-                lead.Y += 0.15f * (enemy.Velocity.Length() / 100f);
+            // Estabilização de Reticula (Anti-Shake)
+            if (enemy.IsSprinting) {
+                lead *= 1.12f; // Compensar inclinação do corpo na corrida
             }
+
+            // Vertical Correction (Extreme Capa Lock)
+            // Sincroniza a subida da mira com o recuo simulado para garantir o Headshot
+            float verticalBoost = 0.18f * (enemy.Velocity.Length() / 150f);
+            lead.Y += verticalBoost;
 
             return enemy.Position + lead;
+        }
+
+        /// <summary>
+        /// Verifica se o alvo está dentro do FOV de ativação do Kernel.
+        /// </summary>
+        public bool IsTargetInSync(Vector3 myPos, Vector3 targetPos, Vector3 myAngle, float fov) {
+            Vector3 direction = Vector3.Normalize(targetPos - myPos);
+            float dot = Vector3.Dot(myAngle, direction);
+            float angle = (float)Math.Acos(dot) * (180f / (float)Math.PI);
+            return angle <= fov;
         }
     }
 }

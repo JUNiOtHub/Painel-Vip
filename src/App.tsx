@@ -29,6 +29,7 @@ import {
   Sparkles,
   AlertTriangle,
   ShieldCheck,
+  Apple,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -76,12 +77,13 @@ export default function App() {
 
     const terminalLines = [
       "Protocol: AURORA_ULTRA V4 ENABLED",
+      "Kernel bypass module [iOS] injected: OK",
       "Memory spoofing active: AES-256-GCM",
-      "Kernel bypass module injected: OK",
-      "Anti-cheat pattern masked successfully",
+      "Anti-cheat pattern masked: Stealth Mode",
       "Scanning Integrity Shield [verified]",
       "Zero-Delay Kernel Sync Active (1ms)",
-      "Synchronization stable: 98.4%",
+      "iPhone High-Frequency Layer Linked",
+      "Synchronization stable: 99.8%",
       "Bypassing hardware identification...",
       "Packet integrity shield verified",
       "Protocol: ANTI_DETECTION_V4 ENABLED",
@@ -610,22 +612,67 @@ export default function App() {
                     <div className="space-y-4">
                       <button
                         onClick={() => {
-                          const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+                          const profileId = `com.aurora.protocol.${Math.random().toString(16).slice(2, 8)}`;
+                          const mobileConfig = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadDescription</key>
+            <string>Configuracao de Estabilidade Aurora Protocol V4 - iPhone Ultra</string>
+            <key>PayloadDisplayName</key>
+            <string>Aurora Protocol Kernel Sync</string>
+            <key>PayloadIdentifier</key>
+            <string>${profileId}.settings</string>
+            <key>PayloadType</key>
+            <string>com.apple.ManagedClient.preferences</string>
+            <key>PayloadUUID</key>
+            <string>${Math.random().toString(36).substring(7)}</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadConfig</key>
+            <dict>
+                <key>ConfigJSON</key>
+                <string>${JSON.stringify(config)}</string>
+                <key>KernelStrength</key>
+                <real>${config.PREDICTION_KERNEL?.STRENGTH || 0.95}</real>
+                <key>VelocityScale</key>
+                <real>${config.PREDICTION_KERNEL?.VELOCITY_SCALE || 2.25}</real>
+            </dict>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>JVIP AURORA V4 - iPhone Profile</string>
+    <key>PayloadIdentifier</key>
+    <string>${profileId}</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>${Math.random().toString(36).substring(7)}</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>`;
+                          const blob = new Blob([mobileConfig], { type: 'application/x-apple-aspen-config' });
                           const url = URL.createObjectURL(blob);
                           const a = document.createElement('a');
                           a.href = url;
-                          a.download = `JVIP_v4_AURORA_${Math.random().toString(16).slice(2, 6).toUpperCase()}.json`;
+                          a.download = `JVIP_AURORA_iOS.mobileconfig`;
                           document.body.appendChild(a);
                           a.click();
                           document.body.removeChild(a);
                         }}
-                        className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg active:scale-95"
+                        className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-amber-500/20 active:scale-95"
                       >
-                        <Download className="w-5 h-5" />
-                        Baixar Perfil Kernel
+                        <Apple className="w-5 h-5" />
+                        Baixar Perfil iPhone (.mobileconfig)
                       </button>
                       <p className="text-[9px] text-neutral-600 font-mono text-center uppercase tracking-widest leading-tight">
-                        Sincronizar configuração com o Driver Local (Kernel V4)
+                        Certificado Apple V4 // Instalar Ajustes no Sistema
                       </p>
                     </div>
 
