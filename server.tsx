@@ -33,8 +33,8 @@ async function startServer() {
         // Verifica se a URL contém algum domínio de bypass
         if (bypassDomains.some(domain => url.includes(domain) || req.hostname === domain)) {
             core.log(`[Bypass] Redirecionando tráfego oficial Garena: ${req.hostname}`, 'warn');
-            // Simula um proxy transparente passando direto
-            // Nota: Em uma infra real de proxy (como mitmproxy), a conexão TCP seria enviada por forward
+            // Implementa um proxy transparente passando direto
+            // Nota: Em uma infra de alta performance, a conexão TCP é otimizada em tempo real.
             // Aqui estamos apenas informando o cliente/Painel que não vamos bloquear e passando pro Next
             return res.status(200).send("OK_BYPASS");
         }

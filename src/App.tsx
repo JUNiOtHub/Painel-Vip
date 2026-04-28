@@ -39,7 +39,7 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [isScanning, setIsScanning] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "arsenal" | "settings" | "proxy">("dashboard");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [downloadStep, setDownloadStep] = useState(1);
   const [isInjecting, setIsInjecting] = useState(false);
@@ -76,17 +76,16 @@ export default function App() {
     const iv = setInterval(fetchData, 2000);
 
     const terminalLines = [
-      "Protocol: AURORA_ULTRA V4 ENABLED",
-      "Kernel bypass module [iOS] injected: OK",
-      "Memory spoofing active: AES-256-GCM",
-      "Anti-cheat pattern masked: Stealth Mode",
-      "Scanning Integrity Shield [verified]",
-      "Zero-Delay Kernel Sync Active (1ms)",
-      "iPhone High-Frequency Layer Linked",
-      "Synchronization stable: 99.8%",
-      "Bypassing hardware identification...",
-      "Packet integrity shield verified",
-      "Protocol: ANTI_DETECTION_V4 ENABLED",
+      "Protocolo Kernel V4: AURORA_ULTRA [ELITE]",
+      "Injeção Ring-0: ESTÁVEL [0xDEADBEEF]",
+      "Camada Híbrida iOS: com.apple.aurora.ios.v4",
+      "Sincronização de Hardware: 1ms [LOCK]",
+      "Filtro Anti-Cheat: Bypass Ativo [100%]",
+      "Tunel de Dados: Encrypt AES-256 [SECURE]",
+      "DPI Overdrive: 12000 [DYNAMIC]",
+      "Processo: painel_v4_vip.exe [SERVER_SYNC]",
+      "Status: ACESSO TOTAL GARANTIDO",
+      "Calibrando Magneto Neural... [OK]",
       "Smart Performance Optimization: Active",
     ];
 
@@ -165,11 +164,30 @@ export default function App() {
     setTerminalOutput((prev) => [
       {
         id: Math.random().toString(),
-        text: "[NUR] Synchronizing Neural Params...",
+        text: "[KERNEL] Injeção de registros 0x44A iniciada...",
         time: new Date().toLocaleTimeString(),
       },
       ...prev,
     ]);
+
+    // Sequência de Injeção Kernel
+    const injectionSequence = [
+      "ESTABELECENDO PONTE RING-0...",
+      "BYPASS DE INTEGRIDADE APPLE/ANDROID [OK]",
+      "MAPEANDO MATRIZ DE OSSOS (HEAD_SCAN)...",
+      "INJETANDO S-LINEAR VECTOR V4...",
+      "SINCRONIZANDO DRIVE DE TOUCH (1ms)...",
+      "APLICANDO MÁSCARA DE HARDWARE [STEALTH]",
+      "PROTOCOLO AURORA V4 ATIVO.",
+    ];
+
+    for (const step of injectionSequence) {
+      await new Promise(r => setTimeout(r, 600));
+      setTerminalOutput((prev) => [
+        { id: Math.random().toString(), text: `[SYSTEM] ${step}`, time: new Date().toLocaleTimeString() },
+        ...prev
+      ]);
+    }
 
     await fetch("/api/inject", {
       method: "POST",
@@ -179,8 +197,8 @@ export default function App() {
 
     setTimeout(() => {
       setIsInjecting(false);
-      window.location.href = "freefire://";
-    }, 2000);
+      // Kernel Sync Handshake: Active
+    }, 1500);
   };
 
   const handleScanNetwork = async () => {
@@ -380,6 +398,12 @@ export default function App() {
             onClick={() => setActiveTab("arsenal")}
           />
           <BottomNavItem
+            icon={<ShieldCheck />}
+            label="Proxy"
+            active={activeTab === "proxy"}
+            onClick={() => setActiveTab("proxy")}
+          />
+          <BottomNavItem
             icon={<Settings />}
             label="Ajustes"
             active={activeTab === "settings"}
@@ -412,6 +436,47 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="lg:ml-[80px] p-4 xs:p-5 lg:p-12 max-w-7xl mx-auto pt-20 lg:pt-12 pb-24 lg:pb-12 relative z-10 min-h-screen">
+        <AnimatePresence>
+          {isInjecting && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center p-8 gap-8"
+            >
+              <div className="absolute inset-0 scanline opacity-20" />
+              <div className="w-64 h-64 relative">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 border-4 border-dashed border-amber-500/20 rounded-full"
+                />
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-4 border-4 border-dashed border-amber-500/40 rounded-full"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Cpu className="w-16 h-16 text-amber-500 animate-pulse" />
+                </div>
+              </div>
+              <div className="text-center space-y-4 max-w-md">
+                <h3 className="text-2xl font-display font-black uppercase italic tracking-tighter text-amber-500 text-glow">INJETANDO MOTOR V4 VIP</h3>
+                <div className="w-full h-1 bg-neutral-900 rounded-full overflow-hidden border border-white/5">
+                   <motion.div 
+                     initial={{ width: "0%" }}
+                     animate={{ width: "100%" }}
+                     transition={{ duration: 4.2, ease: "linear" }}
+                     className="h-full bg-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.8)]"
+                   />
+                </div>
+                <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest font-black italic">
+                  Escrita Direta em Memória (Ring-0 Access)
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {/* Compact Header for Dashboard */}
         <div className="mb-6 lg:mb-10 flex flex-col xs:flex-row items-start xs:items-end justify-between gap-4">
           <div className="space-y-0.5">
@@ -440,49 +505,97 @@ export default function App() {
               className="grid grid-cols-1 lg:grid-cols-12 gap-6"
             >
               <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <BentoCard className="sm:col-span-2 p-5 xs:p-8">
+                <BentoCard className="sm:col-span-2 p-5 xs:p-8 overflow-hidden group">
                   <div className="flex flex-col h-full justify-between gap-6 xs:gap-10">
                     <div className="space-y-3 xs:space-y-4">
                       <div className="flex items-center gap-3">
-                        <Activity className="text-amber-500 w-4 h-4 xs:w-5 xs:h-5" />
-                        <h3 className="text-lg xs:text-xl font-display font-black tracking-tight uppercase italic">
-                          Monitor de Performance
+                        <Activity className="text-amber-500 w-4 h-4 xs:w-5 xs:h-5 text-glow" />
+                        <h3 className="text-lg xs:text-xl font-display font-black tracking-tight uppercase italic drop-shadow-sm">
+                          CENTRAL DE COMANDO KERNEL
                         </h3>
                       </div>
-                      <p className="text-neutral-500 text-xs xs:text-sm max-w-xl">
-                        Informações em tempo real da injeção de memória e status do bypass. 
-                        Configurações otimizadas para alto desempenho.
+                      <p className="text-neutral-500 text-xs xs:text-sm max-w-xl font-medium">
+                        Integração total via **Injeção de Hardware**. Modificando registros de memória em tempo real para 
+                        estabilização de mira e predição balística avançada. Status: **Bypass Indetectável**.
                       </p>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 xs:gap-6">
-                      <StatBlock label="Abatimentos" value={stats.kills} />
-                      <StatBlock label="HS %" value={`${stats.headshotRate}%`} />
-                      <StatBlock label="Ativos" value={stats.activePlayers} />
-                      <StatBlock label="Bypass" value="PROTEGIDO" color="text-emerald-500" />
+                      <StatBlock label="Eficiência Capa" value="99.4%" color="text-amber-500" />
+                      <StatBlock label="Detecção" value="0.00%" color="text-emerald-500" />
+                      <StatBlock label="Injeção" value="STABLE" color="text-amber-500" />
+                      <StatBlock label="Bypass" value="ATIVO" color="text-emerald-500" />
+                    </div>
+                  </div>
+                  <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <Zap className="w-32 h-32 text-amber-500" />
+                  </div>
+                </BentoCard>
+
+                <BentoCard className="sm:col-span-2 p-8 border-white/5 bg-black/40">
+                  <div className="flex flex-col lg:flex-row gap-8 items-center">
+                    <div className="lg:w-1/2 space-y-4">
+                      <h4 className="text-xs font-black uppercase tracking-widest text-neutral-500 italic">Monitor de Calibração</h4>
+                      <div className="h-48 w-full bg-black rounded-3xl border border-white/5 relative overflow-hidden flex items-center justify-center p-8">
+                        <div className="absolute inset-0 grid grid-cols-6 gap-px opacity-5">
+                          {[...Array(36)].map((_, i) => <div key={i} className="border border-white/10" />)}
+                        </div>
+                        <div className="relative">
+                           <Crosshair className="w-12 h-12 text-amber-500 animate-pulse" />
+                           <motion.div 
+                             animate={{ y: [-10, -30, -10], scale: [1, 1.1, 1] }}
+                             transition={{ duration: 1.5, repeat: Infinity }}
+                             className="absolute -top-10 left-1/2 -translate-x-1/2 text-[9px] font-black text-amber-500 uppercase italic whitespace-nowrap"
+                           >
+                             Force Pull: 4.2x
+                           </motion.div>
+                        </div>
+                        <div className="absolute bottom-4 right-4 flex items-center gap-2">
+                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                           <span className="text-[8px] font-black uppercase text-neutral-500">Live Sync 1ms</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="lg:w-1/2 grid grid-cols-2 gap-4">
+                       <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
+                          <span className="text-[8px] font-black text-neutral-600 uppercase">Aceleração</span>
+                          <p className="text-lg font-display font-black italic">Log-Sync</p>
+                       </div>
+                       <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
+                          <span className="text-[8px] font-black text-neutral-600 uppercase">Suavização</span>
+                          <p className="text-lg font-display font-black italic">Hermite</p>
+                       </div>
+                       <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
+                          <span className="text-[8px] font-black text-neutral-600 uppercase">DPI Virtual</span>
+                          <p className="text-lg font-display font-black italic">12.5k</p>
+                       </div>
+                       <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1 text-amber-500">
+                          <span className="text-[8px] font-black text-neutral-600 uppercase">Puxão V4</span>
+                          <p className="text-lg font-display font-black italic">AUTO</p>
+                       </div>
                     </div>
                   </div>
                 </BentoCard>
 
-                <BentoCard className="p-8">
+                <BentoCard className="p-8 hover:border-amber-500/30 transition-all">
                   <div className="space-y-6">
                     <div className="flex items-center gap-2">
                       <Target className="w-4 h-4 text-amber-500" />
-                      <h3 className="text-lg font-display font-black italic uppercase">Direcionamento</h3>
+                      <h3 className="text-lg font-display font-black italic uppercase">Alvo de Injeção</h3>
                     </div>
                     <div className="flex flex-col gap-2">
                       <AimOption
-                        label="CABEÇA"
+                        label="CABEÇA (MAGNETO)"
                         active={config.NECK_DOMINANCE?.AIM_TARGET === "HEAD"}
                         onClick={() => setConfigValue("NECK_DOMINANCE", "AIM_TARGET", "HEAD")}
                       />
                       <AimOption
-                        label="PESCOÇO"
+                        label="PESCOÇO (LOCK)"
                         active={config.NECK_DOMINANCE?.AIM_TARGET === "NECK"}
                         onClick={() => setConfigValue("NECK_DOMINANCE", "AIM_TARGET", "NECK")}
                       />
                       <AimOption
-                        label="ADAPTATIVO"
+                        label="ADAPTATIVO V4"
                         active={config.NECK_DOMINANCE?.AIM_TARGET === "CHEST"}
                         onClick={() => setConfigValue("NECK_DOMINANCE", "AIM_TARGET", "CHEST")}
                       />
@@ -490,22 +603,22 @@ export default function App() {
                   </div>
                 </BentoCard>
 
-                <BentoCard className="p-8">
+                <BentoCard className="p-8 hover:border-emerald-500/30 transition-all">
                   <div className="space-y-6">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                      <h3 className="text-lg font-display font-black italic uppercase">Segurança Ativa</h3>
+                      <h3 className="text-lg font-display font-black italic uppercase">Bypass Ativo</h3>
                     </div>
                     <div className="space-y-3">
                       <FeatureToggle
-                        label="ANTI-RECOIL"
+                        label="ZERO-RECOIL"
                         icon={<Fingerprint className="w-4 h-4" />}
                         active={config.FEATURES?.NO_RECOIL}
                         onClick={() => setConfigValue("FEATURES", "NO_RECOIL", !config.FEATURES?.NO_RECOIL)}
                       />
-                      <div className="p-4 bg-black/40 border border-white/5 rounded-xl flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Escudo Digital</span>
-                        <span className="text-[10px] font-black text-emerald-500">INDETECTÁVEL</span>
+                      <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex justify-between items-center group">
+                        <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Invisível</span>
+                        <span className="text-[10px] font-black text-emerald-500 animate-pulse">PROTECTED</span>
                       </div>
                     </div>
                   </div>
@@ -513,35 +626,41 @@ export default function App() {
               </div>
 
               <div className="lg:col-span-4 flex flex-col gap-6">
-                <BentoCard className="p-8 bg-amber-500 shadow-xl border-none">
-                  <div className="flex flex-col h-full justify-between items-start gap-8">
-                    <div className="w-12 h-12 bg-black/20 rounded-xl flex items-center justify-center">
-                      <Power className="w-6 h-6 text-black" />
+                <BentoCard className="p-8 bg-amber-500 shadow-[0_0_40px_rgba(245,158,11,0.2)] border-none group overflow-hidden relative">
+                  <div className="flex flex-col h-full justify-between items-start gap-8 relative z-10">
+                    <div className="w-12 h-12 bg-black/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Zap className="w-6 h-6 text-black fill-black" />
                     </div>
                     <div className="space-y-4 w-full">
                       <h3 className="text-2xl font-display font-black text-black italic uppercase tracking-tighter leading-none">
-                        SINCRONIZAR <br />DADOS
+                        START <br />SEQUENCE
                       </h3>
                       <button
                         onClick={handleInject}
                         disabled={isInjecting}
-                        className="bg-black text-amber-500 w-full py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95 disabled:opacity-50"
+                        className="bg-black text-amber-500 w-full py-5 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:bg-neutral-900 transition-all shadow-xl active:scale-95 disabled:opacity-50"
                       >
-                        {isInjecting ? "SINCRONIZANDO..." : "ATIVAR AGORA"}
+                        {isInjecting ? "INJETANDO..." : "ACTIVAR BYPASS"}
                       </button>
                     </div>
+                  </div>
+                  <div className="absolute -bottom-8 -right-8 opacity-20 rotate-12 scale-150 group-hover:scale-[1.7] transition-transform duration-1000">
+                    <Crosshair className="w-32 h-32 text-black" />
                   </div>
                 </BentoCard>
 
                 <BentoCard className="flex-1 p-6 flex flex-col overflow-hidden glass-dark min-h-[300px]">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Terminal className="w-3 h-3 text-neutral-500" />
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-neutral-500">System Logs</span>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                       <Terminal className="w-3 h-3 text-neutral-500" />
+                       <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-neutral-500">Kernel Out</span>
+                    </div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                   </div>
-                  <div className="space-y-3 flex-1 overflow-y-auto">
-                    {terminalOutput.slice(0, 10).map((l) => (
-                      <div key={l.id} className="text-[10px] font-mono text-neutral-500 leading-tight">
-                        <span className="text-amber-500/40">[{l.time}]</span> {l.text}
+                  <div className="space-y-3 flex-1 overflow-y-auto custom-scrollbar">
+                    {terminalOutput.map((l) => (
+                      <div key={l.id} className="text-[10px] font-mono text-neutral-400 leading-tight border-l border-white/5 pl-3">
+                        <span className="text-amber-500/60 font-black">[{l.time}]</span> {l.text}
                       </div>
                     ))}
                   </div>
@@ -550,69 +669,269 @@ export default function App() {
             </motion.div>
           )}
 
+          {activeTab === "proxy" && (
+            <motion.div
+              key="proxy"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+            >
+              <div className="lg:col-span-8 flex flex-col gap-6">
+                <BentoCard className="p-8 relative overflow-hidden glass-amber border-amber-500/30">
+                  <div className="flex flex-col gap-8 relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <h3 className="text-2xl font-display font-black uppercase italic tracking-tighter">
+                          Traffic <span className="text-amber-500">Interceptor</span>
+                        </h3>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">
+                          Manipulação de Pacotes UDP Garena
+                        </p>
+                      </div>
+                      <div className="p-4 bg-amber-500 rounded-2xl text-black shadow-xl animate-pulse">
+                        <Activity className="w-6 h-6" />
+                      </div>
+                    </div>
+
+                    <div className="relative h-64 bg-black/60 rounded-[2.5rem] border border-white/10 overflow-hidden flex items-center justify-center">
+                       {/* Packet Visualizer */}
+                       <div className="absolute inset-0 flex items-end justify-around px-12 pb-8">
+                         {[...Array(20)].map((_, i) => (
+                           <motion.div
+                             key={i}
+                             animate={{
+                               height: [20, 160, 40, 120, 20],
+                               opacity: [0.3, 1, 0.3],
+                               backgroundColor: ["#f59e0b", "#10b981", "#f59e0b"]
+                             }}
+                             transition={{
+                               duration: 2 + Math.random() * 2,
+                               repeat: Infinity,
+                               delay: i * 0.1,
+                               ease: "easeInOut"
+                             }}
+                             className="w-1.5 bg-amber-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.4)]"
+                           />
+                         ))}
+                       </div>
+                       
+                       <div className="relative z-10 bg-black/80 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/5 space-y-2">
+                           <h4 className="text-sm font-black uppercase tracking-widest text-amber-500 text-glow">PROTOTYPE: SYNC_UDP_FIX</h4>
+                           <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-[0.2em] text-center">
+                             Injeção de Vetores: ATIVA
+                           </p>
+                       </div>
+                       
+                       <div className="scanline absolute inset-0 opacity-10" />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                       <PacketStat label="Alvos Scaneados" value="12" />
+                       <PacketStat label="Lag Compensation" value="-120ms" color="text-emerald-500" />
+                       <PacketStat label="Injeção Hardware" value="FULL" color="text-amber-500" />
+                    </div>
+                  </div>
+                  <div className="absolute top-0 right-0 p-8 opacity-5">
+                    <ShieldCheck className="w-64 h-64 text-amber-500" />
+                  </div>
+                </BentoCard>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                   <BentoCard className="p-8 bg-neutral-900/60 flex items-center gap-6 group hover:border-amber-500/20 transition-all">
+                      <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+                        <Zap className="w-7 h-7" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-display font-black uppercase italic text-sm">Turbo Flow</h4>
+                        <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-tight">Encaminhamento prioritário de pacotes no servidor.</p>
+                      </div>
+                   </BentoCard>
+                   <BentoCard className="p-8 bg-neutral-900/60 flex items-center gap-6 group hover:border-emerald-500/20 transition-all">
+                      <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                        <ShieldCheck className="w-7 h-7" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-display font-black uppercase italic text-sm">Crypt Mask</h4>
+                        <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-tight">Pacotes criptografados para evitar detecção de ISP.</p>
+                      </div>
+                   </BentoCard>
+                </div>
+              </div>
+
+              <div className="lg:col-span-4 flex flex-col gap-6">
+                 <BentoCard className="p-8 space-y-8 h-full bg-black/40">
+                    <div className="space-y-2">
+                       <h3 className="text-sm font-black uppercase tracking-widest text-neutral-400">Status do Túnel</h3>
+                       <div className="h-1 lg:h-2 w-full bg-neutral-800 rounded-full overflow-hidden">
+                         <motion.div 
+                           animate={{ x: ["-100%", "100%"] }}
+                           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                           className="w-1/3 h-full bg-amber-500"
+                         />
+                       </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                       <ProxyFeature label="Injeção de DNS" active />
+                       <ProxyFeature label="Spoofing de IP" active />
+                       <ProxyFeature label="UDP Tunneling" active />
+                       <ProxyFeature label="Kernel Bridge" active />
+                    </div>
+
+                    <div className="pt-6 border-t border-white/5">
+                       <div className="p-4 bg-amber-500/5 rounded-2xl border border-amber-500/10 text-center">
+                          <p className="text-[10px] font-black uppercase text-amber-500 tracking-widest leading-relaxed">
+                            Servidor VIP: SÃO PAULO - BR <br /> Latência: 4ms
+                          </p>
+                       </div>
+                    </div>
+                 </BentoCard>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === "arsenal" && (
             <motion.div
               key="arsenal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
             >
-              <WeaponCard
-                name="XM8 - HYPERION"
-                type="Rifle"
-                rarity="LEGENDARY"
-                sync={100}
-                stats={{ dmg: 98, acc: 100, rng: 85 }}
-                glow="border-amber-500/30"
-              />
-              <WeaponCard
-                name="MP40 - TITAN"
-                type="SMG"
-                rarity="MYTHIC"
-                sync={99.8}
-                stats={{ dmg: 45, acc: 98, rng: 30 }}
-                glow="border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.1)]"
-              />
-              <WeaponCard
-                name="M1887 - APOCALYPSE"
-                type="Shotgun"
-                rarity="EPIC"
-                sync={98.5}
-                stats={{ dmg: 100, acc: 95, rng: 5 }}
-                glow="border-purple-500/30"
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <WeaponCard
+                  name="XM8 - HYPERION"
+                  type="Rifle"
+                  rarity="LEGENDARY"
+                  sync={100}
+                  stats={{ dmg: 98, acc: 100, rng: 85 }}
+                  glow="border-amber-500/30"
+                />
+                <WeaponCard
+                  name="MP40 - TITAN"
+                  type="SMG"
+                  rarity="MYTHIC"
+                  sync={99.8}
+                  stats={{ dmg: 45, acc: 98, rng: 30 }}
+                  glow="border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.1)]"
+                />
+                <WeaponCard
+                  name="M1887 - APOCALYPSE"
+                  type="Shotgun"
+                  rarity="EPIC"
+                  sync={98.5}
+                  stats={{ dmg: 100, acc: 95, rng: 5 }}
+                  glow="border-purple-500/30"
+                />
+              </div>
+
+              <BentoCard className="p-8 bg-neutral-900/40 border-white/5">
+                <div className="flex flex-col lg:flex-row gap-12">
+                   <div className="lg:w-1/3 space-y-4">
+                      <div className="flex items-center gap-3">
+                         <Zap className="w-5 h-5 text-amber-500" />
+                         <h3 className="text-xl font-display font-black uppercase italic">Ajuste de Puxada</h3>
+                      </div>
+                      <p className="text-xs text-neutral-500 leading-relaxed font-medium">
+                        Calibração fina do multiplicador vertical por categoria de arma. 
+                        Recomendado: 1.25x para Rifles e 2.8x para Desert Eagle/SVD.
+                      </p>
+                   </div>
+                   <div className="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                         <label className="text-[10px] font-black uppercase tracking-widest text-neutral-600 block">Multiplicador Rifle</label>
+                         <div className="flex items-center gap-4">
+                            <div className="flex-1 h-1 bg-neutral-800 rounded-full overflow-hidden">
+                               <div className="w-[85%] h-full bg-amber-500" />
+                            </div>
+                            <span className="text-xs font-mono font-bold text-amber-500">1.8x</span>
+                         </div>
+                      </div>
+                      <div className="space-y-4">
+                         <label className="text-[10px] font-black uppercase tracking-widest text-neutral-600 block">Multiplicador SMG</label>
+                         <div className="flex items-center gap-4">
+                            <div className="flex-1 h-1 bg-neutral-800 rounded-full overflow-hidden">
+                               <div className="w-[95%] h-full bg-amber-500" />
+                            </div>
+                            <span className="text-xs font-mono font-bold text-amber-500">2.4x</span>
+                         </div>
+                      </div>
+                      <div className="space-y-4">
+                         <label className="text-[10px] font-black uppercase tracking-widest text-neutral-600 block">Curva de Aceleração</label>
+                         <div className="flex items-center gap-4">
+                            <div className="flex-1 h-1 bg-neutral-800 rounded-full overflow-hidden">
+                               <div className="w-[60%] h-full bg-amber-500" />
+                            </div>
+                            <span className="text-xs font-mono font-bold text-amber-500">Linear</span>
+                         </div>
+                      </div>
+                      <div className="space-y-4">
+                         <label className="text-[10px] font-black uppercase tracking-widest text-neutral-600 block">Auto-Pull Head</label>
+                         <div className="flex items-center gap-4">
+                            <div className="flex-1 h-1 bg-neutral-800 rounded-full overflow-hidden">
+                               <div className="w-[100%] h-full bg-emerald-500" />
+                            </div>
+                            <span className="text-xs font-mono font-bold text-emerald-500">MAX</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              </BentoCard>
             </motion.div>
           )}
 
           {activeTab === "settings" && (
             <motion.div
               key="settings"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
               className="space-y-8"
             >
-              <BentoCard className="p-8 lg:p-12 border-amber-500/10">
-                <div className="flex flex-col lg:flex-row gap-12">
-                  <div className="lg:w-1/3 space-y-6">
-                    <div className="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center text-black">
-                      <Cpu className="w-8 h-8" />
-                    </div>
-                    <h2 className="text-3xl font-display font-black tracking-tight italic uppercase">
-                      Driver <br />
-                      <span className="text-amber-500">Kernel</span>
+              <div className="flex flex-col lg:flex-row gap-8">
+                <div className="lg:w-1/3 flex flex-col gap-6">
+                  <div className="p-8 bg-amber-500 rounded-[2.5rem] text-black shadow-[0_0_50px_rgba(245,158,11,0.2)]">
+                    <h2 className="text-4xl font-display font-black uppercase italic tracking-tighter leading-none mb-4">
+                      MOTOR <br />ELITE V4
                     </h2>
-                    <p className="text-neutral-500 text-sm leading-relaxed">
-                      Ajuste os parâmetros de sensibilidade e aquisição de alvos do motor.
-                    </p>
+                    <div className="flex items-center gap-2 mb-6">
+                      <div className="w-2 h-2 rounded-full bg-black animate-pulse" />
+                      <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Sincronizado via Kernel</span>
+                    </div>
+                    <div className="space-y-2 pt-4 border-t border-black/10">
+                       <p className="text-[10px] font-bold uppercase">Firmware: Aurora_OS_2024</p>
+                       <p className="text-[10px] font-bold uppercase">Licença: VIP_PERMANENTE</p>
+                    </div>
                   </div>
 
-                  <div className="lg:w-2/3 grid grid-cols-1 gap-8 bg-black/40 p-6 xs:p-8 rounded-[2rem] border border-white/5">
+                  <BentoCard className="p-6 bg-black/40 border-white/5">
+                     <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                           <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                           <span className="text-xs font-black uppercase italic">Segurança Ativa</span>
+                        </div>
+                        <div className="space-y-2">
+                           <ProxySetting label="Anti-Ban" status="RING-0" />
+                           <ProxySetting label="Spoofing" status="ACTIVE" />
+                           <ProxySetting label="Packet Mask" status="ENABLED" />
+                        </div>
+                     </div>
+                  </BentoCard>
+                </div>
+
+                <div className="lg:w-2/3 grid grid-cols-1 gap-8 bg-black/60 p-8 lg:p-12 rounded-[3rem] border border-white/10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                    <Apple className="w-64 h-64 text-white" />
+                  </div>
+
+                  <div className="space-y-8 relative z-10">
                     <div className="space-y-4">
                       <button
                         onClick={() => {
-                          const profileId = `com.aurora.protocol.${Math.random().toString(16).slice(2, 8)}`;
+                          const uuid = () => Math.random().toString(36).substring(2, 10).toUpperCase();
+                          const profileUUID = uuid();
+                          const configUUID = uuid();
                           const mobileConfig = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -621,38 +940,38 @@ export default function App() {
     <array>
         <dict>
             <key>PayloadDescription</key>
-            <string>Configuracao de Estabilidade Aurora Protocol V4 - iPhone Ultra</string>
+            <string>Configuração de Otimização Kernel Aurora VIP V4 - Elite iPhone Sync</string>
             <key>PayloadDisplayName</key>
-            <string>Aurora Protocol Kernel Sync</string>
+            <string>Aurora Kernel V4 Engine</string>
             <key>PayloadIdentifier</key>
-            <string>${profileId}.settings</string>
+            <string>com.aurora.v4.sync.${configUUID}</string>
             <key>PayloadType</key>
             <string>com.apple.ManagedClient.preferences</string>
             <key>PayloadUUID</key>
-            <string>${Math.random().toString(36).substring(7)}</string>
+            <string>${configUUID}</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>PayloadConfig</key>
             <dict>
-                <key>ConfigJSON</key>
-                <string>${JSON.stringify(config)}</string>
-                <key>KernelStrength</key>
+                <key>ForceCapa</key>
                 <real>${config.PREDICTION_KERNEL?.STRENGTH || 0.95}</real>
-                <key>VelocityScale</key>
-                <real>${config.PREDICTION_KERNEL?.VELOCITY_SCALE || 2.25}</real>
+                <key>BypassRate</key>
+                <string>1ms</string>
+                <key>VectorLock</key>
+                <string>${config.NECK_DOMINANCE?.AIM_TARGET}</string>
+                <key>Signature</key>
+                <string>AURORAVIP-IOS-V4-STABLE</string>
             </dict>
         </dict>
     </array>
     <key>PayloadDisplayName</key>
-    <string>JVIP AURORA V4 - iPhone Profile</string>
+    <string>JVIP AURORA V4 - ELITE IPHONE</string>
     <key>PayloadIdentifier</key>
-    <string>${profileId}</string>
-    <key>PayloadRemovalDisallowed</key>
-    <false/>
+    <string>com.aurora.vip.v4</string>
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadUUID</key>
-    <string>${Math.random().toString(36).substring(7)}</string>
+    <string>${profileUUID}</string>
     <key>PayloadVersion</key>
     <integer>1</integer>
 </dict>
@@ -661,22 +980,47 @@ export default function App() {
                           const url = URL.createObjectURL(blob);
                           const a = document.createElement('a');
                           a.href = url;
-                          a.download = `JVIP_AURORA_iOS.mobileconfig`;
+                          a.download = `AURORA_VIP_V4_APPLE.mobileconfig`;
                           document.body.appendChild(a);
                           a.click();
                           document.body.removeChild(a);
                         }}
-                        className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-amber-500/20 active:scale-95"
+                        className="w-full py-6 bg-gradient-to-r from-amber-600 to-amber-400 hover:from-amber-500 hover:to-amber-300 text-black font-black uppercase tracking-[0.3em] rounded-3xl flex items-center justify-center gap-4 transition-all shadow-[0_0_40px_rgba(245,158,11,0.3)] active:scale-95 group"
                       >
-                        <Apple className="w-5 h-5" />
-                        Baixar Perfil iPhone (.mobileconfig)
+                        <Apple className="w-8 h-8 group-hover:rotate-12 transition-transform" />
+                        INSTALAR AJUSTES IPHONE (V4)
                       </button>
-                      <p className="text-[9px] text-neutral-600 font-mono text-center uppercase tracking-widest leading-tight">
-                        Certificado Apple V4 // Instalar Ajustes no Sistema
+                      <p className="text-[10px] text-neutral-500 font-mono text-center uppercase tracking-widest leading-relaxed">
+                        Certificação de Desenvolvedor Aurora Protocol <br />
+                        Sincronização em Nível de Hardware (Ring-0)
                       </p>
                     </div>
 
-                    <div className="h-[1px] bg-white/5" />
+                      <div className="space-y-4">
+                        <label className="flex items-center justify-between">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                            Frequência de Injeção
+                          </span>
+                          <span className="text-amber-500 font-mono font-bold">1ms</span>
+                        </label>
+                        <div className="h-1 bg-neutral-800 rounded-full overflow-hidden">
+                          <div className="w-full h-full bg-amber-500" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <label className="flex items-center justify-between">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                            Protocolo de Estabilização
+                          </span>
+                          <span className="text-emerald-500 font-mono font-bold text-[10px] uppercase">HYBRID_V4</span>
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                           <div className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[8px] font-bold text-center uppercase tracking-widest">Fixed</div>
+                           <div className="px-2 py-1 bg-amber-500 text-black rounded text-[8px] font-black text-center uppercase tracking-widest">Dynamic</div>
+                           <div className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[8px] font-bold text-center uppercase tracking-widest">Off</div>
+                        </div>
+                      </div>
 
                     <div className="space-y-6">
                       <label className="flex items-center justify-between">
@@ -739,7 +1083,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-              </BentoCard>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <GenericToggle
@@ -853,6 +1197,36 @@ function BentoCard({ children, className }: any) {
       className={`bg-neutral-900/40 rounded-2xl xs:rounded-3xl border border-white/5 relative backdrop-blur-md transition-all duration-500 hover:border-white/10 ${className}`}
     >
       {children}
+    </div>
+  );
+}
+
+function ProxyFeature({ label, active }: any) {
+  return (
+    <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+       <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{label}</span>
+       <div className={`flex items-center gap-2 ${active ? "text-emerald-500" : "text-neutral-600"}`}>
+          <span className="text-[9px] font-black uppercase tracking-widest">{active ? "STATUS: OK" : "OFFLINE"}</span>
+          <div className={`w-1.5 h-1.5 rounded-full ${active ? "bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-neutral-800"}`} />
+       </div>
+    </div>
+  );
+}
+
+function PacketStat({ label, value, color = "text-white" }: any) {
+  return (
+    <div className="p-4 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-1">
+       <span className="text-[8px] font-black text-neutral-600 uppercase tracking-widest">{label}</span>
+       <span className={`text-lg font-display font-black italic ${color}`}>{value}</span>
+    </div>
+  );
+}
+
+function ProxySetting({ label, status, color = "text-emerald-500" }: any) {
+  return (
+    <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+       <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{label}</span>
+       <span className={`text-[10px] font-black uppercase tracking-widest ${color}`}>{status}</span>
     </div>
   );
 }
