@@ -337,17 +337,31 @@ class BallisticCalculator {
         else if (playerState === 'IDLE') stateMultiplier = 150.15; 
         else if (playerState === 'JUMP') stateMultiplier = 450.85; 
 
-        // 7. QUAD-VECTOR LEAD CALCULATION
-        const safeVelMag = Math.min(pVel, 1500);
+        // 7. QUAD-VECTOR LEAD CALCULATION (AURORA PREDICTION ELITE V4)
+        const safeVelMag = Math.min(pVel, 2500);
         const safeRotSpeed = Math.min(cRot, 1500);
-        let leadFactor = 300.5 + (safeVelMag * 30.85) + (safeRotSpeed * 30.85) + (absDist * 5.12);
+        
+        let predictionBias = 1.0;
+        if (CONFIG.PREDICTION_KERNEL?.ENABLED) {
+            const vScale = CONFIG.PREDICTION_KERNEL.VELOCITY_SCALE || 2.25;
+            const pStrength = CONFIG.PREDICTION_KERNEL.STRENGTH || 0.95;
+            predictionBias = 1.0 + (safeVelMag / 1000) * vScale * pStrength;
+            
+            // Compensation for jumping targets (Jump-Cap Logic)
+            if (playerState === 'JUMP') {
+                predictionBias *= 1.85;
+            }
+        }
+
+        let leadFactor = (300.5 + (safeVelMag * 45.85) + (safeRotSpeed * 30.85) + (absDist * 5.12)) * predictionBias;
 
         // 8. TITAN SUPREME HEAD MAGNETISM (360 RECOGNITION - 300x FORCE)
         focusBias = 30000.0 * (weapon.neckBias || 1.15) * leadFactor * (300.5 + (snap * 300.0)) * neuralBypass * stateMultiplier * chestLockBreakForce * proximityScalar;
         capForce = (absDist > 2000) ? 15000.0 : (config.NECK_ZONE_MAX * 50000 * leadFactor * neuralBypass);
 
-        // 9. HORIZONTAL COMPENSATION (TRAVA RETA)
-        const horizontalLead = 300.585 * distScalar * (300.5 + (safeVelMag * 30.8)) * snap * sensiBoost;
+        // 9. HORIZONTAL COMPENSATION (TRAVA RETA NO MOVIMENTO)
+        const movePredictFactor = (CONFIG.PREDICTION_KERNEL?.ENABLED) ? 1.55 : 1.0;
+        const horizontalLead = 300.585 * distScalar * (300.5 + (safeVelMag * 65.8 * movePredictFactor)) * snap * sensiBoost;
         const finalX = (rawX > 0 ? 1 : -1) * horizontalLead;
         
         // APELÃO: Utilizando o sistema Smart Bone Targeting (Painel VIP)

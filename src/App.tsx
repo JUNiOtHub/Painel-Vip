@@ -606,7 +606,31 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="lg:w-2/3 grid grid-cols-1 gap-10 bg-black/40 p-8 rounded-[2rem] border border-white/5">
+                  <div className="lg:w-2/3 grid grid-cols-1 gap-8 bg-black/40 p-6 xs:p-8 rounded-[2rem] border border-white/5">
+                    <div className="space-y-4">
+                      <button
+                        onClick={() => {
+                          const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `JVIP_v4_AURORA_${Math.random().toString(16).slice(2, 6).toUpperCase()}.json`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                        }}
+                        className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg active:scale-95"
+                      >
+                        <Download className="w-5 h-5" />
+                        Baixar Perfil Kernel
+                      </button>
+                      <p className="text-[9px] text-neutral-600 font-mono text-center uppercase tracking-widest leading-tight">
+                        Sincronizar configuração com o Driver Local (Kernel V4)
+                      </p>
+                    </div>
+
+                    <div className="h-[1px] bg-white/5" />
+
                     <div className="space-y-6">
                       <label className="flex items-center justify-between">
                         <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
@@ -630,19 +654,39 @@ export default function App() {
                     <div className="space-y-6">
                       <label className="flex items-center justify-between">
                         <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                          Pull Intensity
+                          Intensidade da Predição
                         </span>
                         <span className="text-amber-500 font-mono font-bold text-lg">
-                          {(config.NECK_DOMINANCE?.MAGNETIC_PULL * 100).toFixed(0)}%
+                          {(config.PREDICTION_KERNEL?.STRENGTH * 100).toFixed(0)}%
                         </span>
                       </label>
                       <input
                         type="range"
                         min="0.1"
-                        max="5.0"
+                        max="1.5"
                         step="0.05"
-                        value={config.NECK_DOMINANCE?.MAGNETIC_PULL || 1.85}
-                        onChange={(e) => setConfigValue("NECK_DOMINANCE", "MAGNETIC_PULL", parseFloat(e.target.value))}
+                        value={config.PREDICTION_KERNEL?.STRENGTH || 0.95}
+                        onChange={(e) => setConfigValue("PREDICTION_KERNEL", "STRENGTH", parseFloat(e.target.value))}
+                        className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                      />
+                    </div>
+
+                    <div className="space-y-6">
+                      <label className="flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                          Compensação de Velocidade 
+                        </span>
+                        <span className="text-amber-500 font-mono font-bold text-lg">
+                          {config.PREDICTION_KERNEL?.VELOCITY_SCALE?.toFixed(2)}x
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="1.0"
+                        max="5.0"
+                        step="0.1"
+                        value={config.PREDICTION_KERNEL?.VELOCITY_SCALE || 2.25}
+                        onChange={(e) => setConfigValue("PREDICTION_KERNEL", "VELOCITY_SCALE", parseFloat(e.target.value))}
                         className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                       />
                     </div>
@@ -651,6 +695,20 @@ export default function App() {
               </BentoCard>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <GenericToggle
+                  label="Predição Kernel V4"
+                  group="PREDICTION_KERNEL"
+                  configKey="ENABLED"
+                  active={config.PREDICTION_KERNEL?.ENABLED}
+                  onToggle={toggleConfig}
+                />
+                <GenericToggle
+                  label="Curva de Salto"
+                  group="PREDICTION_KERNEL"
+                  configKey="PREDICT_JUMP_CURVE"
+                  active={config.PREDICTION_KERNEL?.PREDICT_JUMP_CURVE}
+                  onToggle={toggleConfig}
+                />
                 <GenericToggle
                   label="Silent Aim"
                   group="FEATURES"

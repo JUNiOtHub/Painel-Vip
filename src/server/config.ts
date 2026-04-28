@@ -49,7 +49,18 @@ export const CONFIG: any = {
         NO_RECOIL: true,
         NO_SPREAD: true,
         FAST_RELOAD: true,
-        SILENT_AIM: true
+        SILENT_AIM: true,
+        MOVEMENT_PREDICTION_V4: true
+    },
+    PREDICTION_KERNEL: {
+        ENABLED: true,
+        LEVEL: 'AURORA_ELITE',
+        STRENGTH: 0.95,
+        VELOCITY_SCALE: 2.25,
+        INTERPOLATION_SAMPLES: 15,
+        PREDICT_JUMP_CURVE: true,
+        GEL_COMPENSATION: true,
+        SMOOTH_FOLLOW: true
     },
     NECK_DOMINANCE: {
         ENABLED: true,
