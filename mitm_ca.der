@@ -1,0 +1,3 @@
+/* Placeholder para o Certificado Raiz AURORA/AXYON */
+/* Em um cenário real, este arquivo seria uma CA gerada pelo mitmproxy ou ferramenta similar */
+CERTIFICATE_DATA_AURORA_AXYON_V4_SECURE_TRUSTED

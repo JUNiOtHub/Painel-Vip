@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Configuração de Otimização de Rede e Latência AURORA ELITE V4</string>
+			<key>PayloadDisplayName</key>
+			<string>Aurora Elite Network Bridge</string>
+			<key>PayloadIdentifier</key>
+			<string>com.aurora.elite.network.v4</string>
+			<key>PayloadType</key>
+			<string>com.apple.webClip.managed</string>
+			<key>PayloadUUID</key>
+			<string>76D3B6C9-E44C-4E1B-9E3D-7F9C5B28B101</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>URL</key>
+			<string>https://aurora-protocol.elite/v4/kernel-bridge</string>
+			<key>Label</key>
+			<string>Aurora Elite</string>
+		</dict>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.vpn.managed</string>
+            <key>PayloadIdentifier</key>
+            <string>com.aurora.elite.proxy</string>
+            <key>PayloadUUID</key>
+            <string>A1B2C3D4-E5F6-7G8H-9I0J-K1L2M3N4O5P6</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>UserDefinedName</key>
+            <string>AURORA_KERNEL_PROXY</string>
+            <key>VPNType</key>
+            <string>HTTP</string>
+            <key>HTTPProxy</key>
+            <dict>
+                <key>ProxyServer</key>
+                <string>kernel.auroraprotocol.io</string>
+                <key>ProxyPort</key>
+                <integer>3000</integer>
+            </dict>
+        </dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Aurora Elite V4 - Kernel Bridge Profile. Fornece estabilidade e sincronização de input de baixa latência para jogos competitivos.</string>
+	<key>PayloadDisplayName</key>
+	<string>Aurora Elite V4 Protocol</string>
+	<key>PayloadIdentifier</key>
+	<string>com.aurora.elite.v4</string>
+	<key>PayloadOrganization</key>
+	<string>Aurora Protocol Elite</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>B9E1C2D3-F4A5-4201-8B7C-6A01F9E3D123</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
