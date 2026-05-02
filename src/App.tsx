@@ -65,9 +65,13 @@ export default function App() {
               <div>
                 <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest block mb-2">Passo 1</span>
                 <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-white mb-2">Certificado</h3>
-                <p className="text-xs text-neutral-500 font-medium leading-relaxed mb-6">
-                  Instale e ative a Confiança Total em Ajustes. Essencial para o Bypass.
+                <p className="text-xs text-neutral-500 font-medium leading-relaxed mb-4">
+                  Baixe o <b>mitm_ca.der</b> e instale. A etapa essencial do Bypass:
                 </p>
+                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4 text-left">
+                  <p className="text-[10px] font-bold text-red-400">⚠️ MUITO IMPORTANTE ⚠️</p>
+                  <p className="text-[10px] text-red-200 mt-1">Vá em Ajustes &gt; Geral &gt; Sobre &gt; Certificados e ative a <b className="text-white">Confiança Total</b> para AXYON.</p>
+                </div>
               </div>
               <button 
                 onClick={() => window.location.href = `${AWS_ENDPOINT}/mitm_ca.der`}
