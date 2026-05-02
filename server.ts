@@ -8,16 +8,8 @@ async function startServer() {
 
   app.use(express.json());
 
-  app.get("/api/kernel/status", (req, res) => {
-    res.json({ 
-      latency: "1.2ms", 
-      activeSessions: 1242, 
-      bypassStatus: "UNDETECTED",
-      version: "4.8.2-PRO"
-    });
-  });
-
   app.get("/download/mobileconfig", (req, res) => {
+    const { awsIp = "18.118.104.195" } = req.query;
     const uuid1 = "R7VIPXIT-PAYLOAD-" + Math.random().toString(36).substring(2, 10).toUpperCase();
     const profileUuid = "R7VIPXIT-PROFILE-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
@@ -28,30 +20,26 @@ async function startServer() {
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>PayloadDescription</key>
-			<string>AXYON Hub v4.8 - R7VIPXIT L7 Proxy Configuration</string>
-			<key>PayloadDisplayName</key>
-			<string>AXYON R7VIPXIT Engine</string>
-			<key>PayloadIdentifier</key>
-			<string>com.axyon.r7vipxit.proxy</string>
 			<key>PayloadType</key>
-			<string>com.apple.webClip.managed</string>
-			<key>PayloadUUID</key>
-			<string>${uuid1}</string>
+			<string>com.apple.proxy.http.global</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
-			<key>URL</key>
-			<string>https://axyon-hub.io/portal</string>
-			<key>Label</key>
-			<string>AXYON R7VIPXIT</string>
+			<key>PayloadIdentifier</key>
+			<string>axyon.vip.config.proxy</string>
+			<key>PayloadUUID</key>
+      <string>${uuid1}</string>
+			<key>ProxyServer</key>
+			<string>${awsIp}</string>
+			<key>ProxyPort</key>
+			<integer>8080</integer>
 		</dict>
 	</array>
 	<key>PayloadDescription</key>
-	<string>AXYON HUB v4.8 (R7VIPXIT). Sistema de Interceptação de Pacotes ARM64.</string>
+	<string>AXYON R7VIPXIT - L7 Network Engine (ARM64 Optimized)</string>
 	<key>PayloadDisplayName</key>
-	<string>AXYON R7VIPXIT Protocol</string>
+	<string>R7VIPXIT AXYON PRO</string>
 	<key>PayloadIdentifier</key>
-	<string>com.axyon.r7vipxit.profile</string>
+	<string>axyon.vip.config</string>
 	<key>PayloadOrganization</key>
 	<string>AXYON Technologies</string>
 	<key>PayloadRemovalDisallowed</key>
@@ -66,82 +54,21 @@ async function startServer() {
 </plist>`;
 
     res.setHeader('Content-Type', 'application/x-apple-aspen-config');
-    res.setHeader('Content-Disposition', 'attachment; filename="R7VIPXIT_ELITE.mobileconfig"');
+    res.setHeader('Content-Disposition', 'attachment; filename="R7VIPXIT.mobileconfig"');
     res.send(config);
   });
 
-  app.get("/download/certificate", (req, res) => {
-    const filePath = path.join(process.cwd(), 'mitm_ca.der');
-    res.setHeader('Content-Type', 'application/x-x509-ca-cert');
-    res.setHeader('Content-Disposition', 'attachment; filename="mitm_ca.der"');
-    res.sendFile(filePath);
-  });
-
-  // AXYON L7 Proxy Simulation Engine
-  const PROXY_STATE: Record<string, { active: boolean, startTime: number, port: string, metrics: { jitter: number, lat: number } }> = {};
-
-  app.post("/api/kernel/inject", (req, res) => {
-    const { hwid, port = "8080" } = req.body;
-    const sessionId = Math.random().toString(36).substring(7);
-    
-    // Inicia o estado da injeção com timestamp para o Warm-up de 20s
-    PROXY_STATE[sessionId] = {
-      active: true,
-      startTime: Date.now(),
-      port: port,
-      metrics: {
-        jitter: Math.random() * 0.15,
-        lat: Math.random() * 2 + 1
-      }
-    };
-
-    console.log(`[AXYON_CORE] Injeção iniciada para HWID: ${hwid} no canal ${port}`);
-    
-    res.json({ 
-        success: true, 
-        sessionId,
-        warmupDuration: 20000,
-        message: "AXYON L7: Handshake iniciado. Aguardando estabilização de buffer (20s)..."
-    });
-  });
-
-  app.get("/api/proxy/stats", (req, res) => {
-    const { sessionId } = req.query;
-    const state = sessionId ? PROXY_STATE[sessionId as string] : null;
-    
-    let mode = "IDLE";
-    let injectionStatus = "WAITING_HANDSHAKE";
-    
-    if (state) {
-        const elapsed = Date.now() - state.startTime;
-        if (elapsed < 20000) {
-            injectionStatus = `BUFFERING_L7 (${Math.floor((elapsed/20000)*100)}%)`;
-        } else {
-            injectionStatus = "ACTIVE_INJECTION";
-            mode = state.port === "8081" ? "LEGIT_PROBABILITY (90%)" : "FULL_OVERRIDE (100%)";
-        }
+  app.get("/api/aws-status", async (req, res) => {
+    try {
+      const response = await fetch("http://18.118.104.195:8080/", { method: "HEAD", signal: AbortSignal.timeout(3000) });
+      res.json({ status: "online" });
+    } catch {
+      res.json({ status: "offline" });
     }
-
-    res.json({
-        intercepted: Math.floor(Math.random() * 25000),
-        decrypted: "TLS 1.3 [ACTIVE]",
-        bandwidth: (Math.random() * 5 + 15).toFixed(1) + " MB/s",
-        activeConnections: Math.floor(Math.random() * 30 + 50),
-        handshakeStatus: state ? (Date.now() - state.startTime < 20000 ? "STABILIZING" : "STABLE") : "IDLE",
-        injectionStatus,
-        mode,
-        port: state?.port || "8080",
-        byteSwaps: state && Date.now() - state.startTime > 20000 ? Math.floor(Math.random() * 500 + 1000) : 0,
-        vectorCorrection: state && Date.now() - state.startTime > 20000 ? (Math.random() * 0.1).toFixed(3) + "°" : "0.000°",
-        jitter: state ? (state.metrics.jitter + (Math.random() * 0.05)).toFixed(2) + "ms" : "0.00ms",
-        recoilStatus: state && Date.now() - state.startTime > 20000 ? "NEUTRALIZED" : "STABILIZING",
-        shieldIntegrity: state && Date.now() - state.startTime > 20000 ? "100%" : "SCANNING"
-    });
   });
-
 
   app.get("/api/health", (req, res) => {
-    res.json({ status: "online", version: "4.0.0-Elite" });
+    res.json({ status: "online", version: "4.8.0-Elite" });
   });
 
   // Vite middleware para desenvolvimento
@@ -160,8 +87,8 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[AXYON_ULTRA_V2] Servidor rodando em http://localhost:${PORT}`);
-    console.log(`[AXYON_ULTRA_V2] Protocolo R7VIPXIT pronto para injeção ARM64.`);
+    console.log(`[AXYON_ULTRA_V2] Master Web Central Online - Port ${PORT}`);
+    console.log(`[AXYON_ULTRA_V2] Static IP Configuration: 18.118.104.195`);
   });
 }
 
