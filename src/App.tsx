@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-const AWS_IP = "18.118.104.195";
+const AWS_IP = import.meta.env.VITE_AWS_IP || "3.134.100.159";
 const AWS_ENDPOINT = `http://${AWS_IP}:8080`;
 
 const BentoCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (

@@ -9,7 +9,7 @@ async function startServer() {
   app.use(express.json());
 
   app.get("/download/mobileconfig", (req, res) => {
-    const { awsIp = "18.118.104.195" } = req.query;
+    const awsIp = (req.query.awsIp as string) || process.env.VITE_AWS_IP || process.env.AWS_IP || "3.134.100.159";
     const uuid1 = "R7VIPXIT-PAYLOAD-" + Math.random().toString(36).substring(2, 10).toUpperCase();
     const profileUuid = "R7VIPXIT-PROFILE-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
@@ -60,7 +60,8 @@ async function startServer() {
 
   app.get("/api/aws-status", async (req, res) => {
     try {
-      const response = await fetch("http://18.118.104.195:8080/", { method: "HEAD", signal: AbortSignal.timeout(3000) });
+      const awsIp = process.env.VITE_AWS_IP || process.env.AWS_IP || "3.134.100.159";
+      const response = await fetch(`http://${awsIp}:8080/status`, { method: "GET", signal: AbortSignal.timeout(5000) });
       res.json({ status: "online" });
     } catch {
       res.json({ status: "offline" });
@@ -88,7 +89,8 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`[AXYON_ULTRA_V2] Master Web Central Online - Port ${PORT}`);
-    console.log(`[AXYON_ULTRA_V2] Static IP Configuration: 18.118.104.195`);
+    const awsIp = process.env.VITE_AWS_IP || process.env.AWS_IP || "3.134.100.159";
+    console.log(`[AXYON_ULTRA_V2] Static IP Configuration: ${awsIp}`);
   });
 }
 

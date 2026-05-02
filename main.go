@@ -43,8 +43,8 @@ func main() {
 	
 	// Rota para o root (usada pelo healthcheck /api/aws-status HEAD request)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Se a requisição não for para proxy, mas for direto para a porta 8080 (ex: HEAD)
-		if r.URL.Host == "" || r.URL.Path == "/" {
+		// Se a requisição não for para proxy, mas for direto para a porta 8080 (ex: HEAD / GET /status)
+		if r.URL.Host == "" || r.URL.Path == "/" || r.URL.Path == "/status" {
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("AXYON Engine V4.8 Online"))
 			return
