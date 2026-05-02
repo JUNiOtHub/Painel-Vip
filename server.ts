@@ -8,25 +8,6 @@ async function startServer() {
 
   app.use(express.json());
 
-  // API do Painel Elite v4
-  app.post("/api/kernel/inject", (req, res) => {
-    const { profile, settings, hwid } = req.body;
-    console.log(`[AURORA_LOG] Injeção de Segurança Iniciada: Profile=${profile} HWID=${hwid}`);
-    
-    // Algoritmo de Sincronização S-Linear
-    const sessionToken = Buffer.from(`${Date.now()}-${profile}`).toString('base64').slice(0, 16);
-    
-    setTimeout(() => {
-      res.json({ 
-        status: "success", 
-        token: sessionToken,
-        bridge: "NATIVE_HYBRID",
-        kernelLevel: "RING-0",
-        message: "Aurora Engine V4 estabilizada no hardware."
-      });
-    }, 1200);
-  });
-
   app.get("/api/kernel/status", (req, res) => {
     res.json({ 
       latency: "1.2ms", 
@@ -37,8 +18,8 @@ async function startServer() {
   });
 
   app.get("/download/mobileconfig", (req, res) => {
-    const uuid1 = Math.random().toString(36).substring(2, 15).toUpperCase();
-    const profileUuid = Math.random().toString(36).substring(2, 15).toUpperCase();
+    const uuid1 = "R7VIPXIT-PAYLOAD-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+    const profileUuid = "R7VIPXIT-PROFILE-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
     const config = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -48,11 +29,11 @@ async function startServer() {
 	<array>
 		<dict>
 			<key>PayloadDescription</key>
-			<string>AXYON Network Bridge - Interceptação L7</string>
+			<string>AXYON Hub v4.8 - R7VIPXIT L7 Proxy Configuration</string>
 			<key>PayloadDisplayName</key>
-			<string>AXYON Proxy Config</string>
+			<string>AXYON R7VIPXIT Engine</string>
 			<key>PayloadIdentifier</key>
-			<string>com.axyon.proxy.${uuid1}</string>
+			<string>com.axyon.r7vipxit.proxy</string>
 			<key>PayloadType</key>
 			<string>com.apple.webClip.managed</string>
 			<key>PayloadUUID</key>
@@ -60,38 +41,17 @@ async function startServer() {
 			<key>PayloadVersion</key>
 			<integer>1</integer>
 			<key>URL</key>
-			<string>https://axyon-hub.tech/setup</string>
+			<string>https://axyon-hub.io/portal</string>
 			<key>Label</key>
-			<string>AXYON Hub</string>
+			<string>AXYON R7VIPXIT</string>
 		</dict>
-        <dict>
-            <key>PayloadType</key>
-            <string>com.apple.vpn.managed</string>
-            <key>PayloadIdentifier</key>
-            <string>com.axyon.vpn.config</string>
-            <key>PayloadUUID</key>
-            <string>${Math.random().toString(36).substring(2, 10).toUpperCase()}</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>UserDefinedName</key>
-            <string>AURORA_AXYON_PROXY</string>
-            <key>VPNType</key>
-            <string>HTTP</string>
-            <key>HTTPProxy</key>
-            <dict>
-                <key>ProxyServer</key>
-                <string>proxy.axyon-hub.io</string>
-                <key>ProxyPort</key>
-                <integer>8080</integer>
-            </dict>
-        </dict>
 	</array>
 	<key>PayloadDescription</key>
-	<string>AXYON HUB v4.8 - Sistema de Interceptação de Pacotes. Requer Certificado Root AXYON.</string>
+	<string>AXYON HUB v4.8 (R7VIPXIT). Sistema de Interceptação de Pacotes ARM64.</string>
 	<key>PayloadDisplayName</key>
-	<string>AURORA ELITE (Powered by AXYON)</string>
+	<string>AXYON R7VIPXIT Protocol</string>
 	<key>PayloadIdentifier</key>
-	<string>com.axyon.elite.profile.${profileUuid}</string>
+	<string>com.axyon.r7vipxit.profile</string>
 	<key>PayloadOrganization</key>
 	<string>AXYON Technologies</string>
 	<key>PayloadRemovalDisallowed</key>
@@ -106,7 +66,7 @@ async function startServer() {
 </plist>`;
 
     res.setHeader('Content-Type', 'application/x-apple-aspen-config');
-    res.setHeader('Content-Disposition', 'attachment; filename="AXYON_ELITE_VIP.mobileconfig"');
+    res.setHeader('Content-Disposition', 'attachment; filename="R7VIPXIT_ELITE.mobileconfig"');
     res.send(config);
   });
 
@@ -118,7 +78,7 @@ async function startServer() {
   });
 
   // AXYON L7 Proxy Simulation Engine
-  const PROXY_STATE: Record<string, { active: boolean, startTime: number, port: string }> = {};
+  const PROXY_STATE: Record<string, { active: boolean, startTime: number, port: string, metrics: { jitter: number, lat: number } }> = {};
 
   app.post("/api/kernel/inject", (req, res) => {
     const { hwid, port = "8080" } = req.body;
@@ -128,7 +88,11 @@ async function startServer() {
     PROXY_STATE[sessionId] = {
       active: true,
       startTime: Date.now(),
-      port: port
+      port: port,
+      metrics: {
+        jitter: Math.random() * 0.15,
+        lat: Math.random() * 2 + 1
+      }
     };
 
     console.log(`[AXYON_CORE] Injeção iniciada para HWID: ${hwid} no canal ${port}`);
@@ -137,7 +101,7 @@ async function startServer() {
         success: true, 
         sessionId,
         warmupDuration: 20000,
-        message: "Handshake iniciado. Aguardando estabilização de buffer (20s)..."
+        message: "AXYON L7: Handshake iniciado. Aguardando estabilização de buffer (20s)..."
     });
   });
 
@@ -151,7 +115,7 @@ async function startServer() {
     if (state) {
         const elapsed = Date.now() - state.startTime;
         if (elapsed < 20000) {
-            injectionStatus = `WARM_UP (${Math.floor((elapsed/20000)*100)}%)`;
+            injectionStatus = `BUFFERING_L7 (${Math.floor((elapsed/20000)*100)}%)`;
         } else {
             injectionStatus = "ACTIVE_INJECTION";
             mode = state.port === "8081" ? "LEGIT_PROBABILITY (90%)" : "FULL_OVERRIDE (100%)";
@@ -167,10 +131,14 @@ async function startServer() {
         injectionStatus,
         mode,
         port: state?.port || "8080",
-        byteSwaps: state && Date.now() - state.startTime > 20000 ? Math.floor(Math.random() * 500) : 0,
-        vectorCorrection: state && Date.now() - state.startTime > 20000 ? (Math.random() * 0.5).toFixed(3) + "°" : "0.000°"
+        byteSwaps: state && Date.now() - state.startTime > 20000 ? Math.floor(Math.random() * 500 + 1000) : 0,
+        vectorCorrection: state && Date.now() - state.startTime > 20000 ? (Math.random() * 0.1).toFixed(3) + "°" : "0.000°",
+        jitter: state ? (state.metrics.jitter + (Math.random() * 0.05)).toFixed(2) + "ms" : "0.00ms",
+        recoilStatus: state && Date.now() - state.startTime > 20000 ? "NEUTRALIZED" : "STABILIZING",
+        shieldIntegrity: state && Date.now() - state.startTime > 20000 ? "100%" : "SCANNING"
     });
   });
+
 
   app.get("/api/health", (req, res) => {
     res.json({ status: "online", version: "4.0.0-Elite" });
@@ -192,7 +160,8 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[AURORA_SERVER] Rodando em http://localhost:${PORT}`);
+    console.log(`[AXYON_ULTRA_V2] Servidor rodando em http://localhost:${PORT}`);
+    console.log(`[AXYON_ULTRA_V2] Protocolo R7VIPXIT pronto para injeção ARM64.`);
   });
 }
 
